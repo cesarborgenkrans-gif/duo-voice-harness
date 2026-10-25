@@ -24,9 +24,10 @@ The character stage stays anchored at the top, with the transcript beneath it an
 
 ## See it in action
 
+https://github.com/user-attachments/assets/9856606f-643e-46e7-a30b-2026edebad4f
 > ▶ **[Watch the 28-second intro video (MP4)](docs/media/duo-voice-harness-intro.mp4)**
 >
-> <sub>Momotamu and Vivi, prompt templates, and the local stage in motion. Music: “Neon Sparkle Dream” from SparkleSnap.</sub>
+> <sub>Tammy and Vivian, prompt templates, and the local stage in motion. Music: “Neon Sparkle Dream” from SparkleSnap.</sub>
 
 ## Why I built this
 
