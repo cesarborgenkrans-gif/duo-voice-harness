@@ -1,0 +1,17 @@
+/* Three rooms share the app's plum, cream and brass conversation language. */
+.conversation-controls{display:flex;flex-wrap:wrap;gap:12px;padding:8px 18px;flex-shrink:0;border-top:1px solid var(--border)}
+.conversation-controls[hidden]{display:none}.conversation-controls label{flex:1;min-width:125px;color:var(--gold);font:600 var(--type-meta)/1.8 var(--ui)}
+.conversation-controls select{display:block;width:100%;min-height:38px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font:var(--type-control)/1.5 var(--ui);padding:6px}
+.conversation-controls p{width:100%;font:var(--type-meta)/1.5 var(--body);color:var(--muted)}
+.studio-producing .logwrap,.studio-producing .console,.studio-producing .conversation-controls{display:none}
+.studio-producing .stage{max-height:125px;flex-shrink:0}.studio-producing .stage .mascot-label{font-size:.7rem}
+.production-panel{margin:6px 12px;flex-shrink:1}.production-source-note{font:var(--type-meta)/1.6 var(--body);color:var(--muted);margin:8px 0}
+.production-brief>#production-source{margin-bottom:12px}.production-brief>#production-source-range{width:100%;min-height:44px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px}
+.activity-option[hidden],#local-model-options[hidden],#btn-start-model[hidden],#btn-stop-local-model[hidden]{display:none!important}
+@media(max-height:680px){.studio-producing .stage{display:none}.conversation-controls{padding:5px 12px;gap:8px}.conversation-controls select{min-height:32px}}
+
+.settings label[hidden]{display:none!important}
+
+@media(max-height:760px){.image-actions{position:sticky;bottom:0;background:var(--surface2);padding-top:6px;box-shadow:0 -5px 12px var(--surface2);z-index:3}}
+
+.production-panel [hidden]{display:none!important}

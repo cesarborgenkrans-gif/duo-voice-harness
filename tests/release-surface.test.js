@@ -1,0 +1,20 @@
+'use strict';
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path'),{spawnSync,execFileSync}=require('node:child_process');
+const root=path.resolve(__dirname,'..');
+test('source inspection rejects tracked private files and reports credential locations without values',async t=>{
+ const base=path.join(root,'artifacts');await fs.mkdir(base,{recursive:true});const folder=await fs.mkdtemp(path.join(base,'release-surface-'));
+ t.after(async()=>{assert.ok(path.resolve(folder).startsWith(path.resolve(base)+path.sep));await fs.rm(folder,{recursive:true,force:true});});
+ const write=async(name,text)=>{const file=path.join(folder,name);await fs.mkdir(path.dirname(file),{recursive:true});await fs.writeFile(file,text);};
+ for(const name of ['README.md','CONTRIBUTING.md','LICENSE','NOTICE','index.html','.github/workflows/checks.yml'])await write(name,'Fixture source only.\n');
+ await write('src/app/main.js',"'use strict';\n");await write('assets/voice/profiles.json','{}');await write('package.json',JSON.stringify({version:'0.0.0-fixture'}));await write('package-lock.json',JSON.stringify({version:'0.0.0-fixture',packages:{'':{version:'0.0.0-fixture'}}}));
+ for(const name of ['.gitignore','scripts/check-source.cjs','scripts/audit-assets.cjs'])await write(name,await fs.readFile(path.join(root,name),'utf8'));
+ await fs.mkdir(path.join(folder,'docs'),{recursive:true});
+ execFileSync('git',['init','--quiet',folder],{windowsHide:true});execFileSync(process.execPath,[path.join(folder,'scripts/audit-assets.cjs'),'--write'],{windowsHide:true});
+ const inspect=()=>spawnSync(process.execPath,[path.join(folder,'scripts/check-source.cjs')],{encoding:'utf8',windowsHide:true});
+ assert.equal(inspect().status,0);
+ await write('credentials.json','{}');execFileSync('git',['add','--force','credentials.json'],{cwd:folder,windowsHide:true});
+ const privateFile=inspect();assert.equal(privateFile.status,1);assert.match(privateFile.stdout,/Runtime\/private material in source selection: credentials.json/);
+ execFileSync('git',['rm','--cached','--force','credentials.json'],{cwd:folder,windowsHide:true});
+ const syntheticToken='ghp_'+'A'.repeat(36);await write('docs/example.md',syntheticToken);
+ const token=inspect();assert.equal(token.status,1);assert.match(token.stdout,/github-token requires review at docs\/example.md:1/);assert.ok(!token.stdout.includes(syntheticToken));
+});

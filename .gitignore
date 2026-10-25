@@ -1,0 +1,72 @@
+# Working notes. Kept on this machine, left out of the public history.
+ROADMAP.md
+
+# Dependencies and build output
+node_modules/
+.venv/
+venv/
+dist/
+build/
+coverage/
+playwright-report/
+test-results/
+
+# Downloaded inference runtimes, weights and model caches
+/runtime/llama.cpp/
+/runtime/models/
+*.gguf
+*.safetensors
+*.ckpt
+*.onnx
+
+# Local application/test data. Keep explicit data-root overrides in these
+# folders or outside the checkout; arbitrary custom paths cannot be predicted.
+/.local-data/
+/artifacts/
+/data/
+/runtime-data/
+/sessions/
+/chats/
+/discussions/
+/worktrees/
+/image-drafts/
+/outputs/
+# The Python backend's fallback when started outside the Electron launcher.
+/runtime/_runtime/
+/runtime/voicegen-oui/outputs/
+/runtime/voicegen-oui/cache/
+
+# Logs, temporary files and local backups
+logs/
+*.log
+voice-decisions.jsonl
+*.tmp
+*.bak*
+*.previous.md
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Local configuration and secrets; share templates, never real credentials.
+.env
+.env.*
+!.env.example
+!.env.template
+/secrets.json
+/credentials.json
+/credentials/
+/voice-connections.json
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Machine-specific launchers, editor and OS state
+*.lnk
+.vscode/
+.idea/
+*.suo
+*.user
+.DS_Store
+Thumbs.db

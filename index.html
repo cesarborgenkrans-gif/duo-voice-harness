@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob: file:; media-src 'self' data: blob: file:; connect-src 'self' data: blob: http://127.0.0.1:* http://localhost:*; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; frame-src 'none'">
+  <title>Duo Voice Harness · Momotamu &amp; Vivi</title>
+  <link rel="icon" type="image/png" href="assets/icon-256.png">
+  <link rel="stylesheet" href="src/app/style.css">
+  <link rel="stylesheet" href="src/interface/live-flow.css">
+  <link rel="stylesheet" href="src/app/workspace.css">
+  <link rel="stylesheet" href="src/speech/speech.css">
+  <link rel="stylesheet" href="src/input/input.css">
+  <link rel="stylesheet" href="src/interface/status-feedback.css">
+  <link rel="stylesheet" href="src/presence/presence.css">
+  <link rel="stylesheet" href="src/app/duo-layout.css">
+  <link rel="stylesheet" href="src/voice/voice-settings.css">
+  <link rel="stylesheet" href="src/documents/source-panel.css">
+</head>
+<body>
+  <header id="free-titlebar" class="free-titlebar" hidden aria-label="Window controls">
+    <span class="free-window-title" hidden>✦ Duo Voice Harness</span>
+    <div class="free-window-controls">
+      <button id="titlebar-engines" type="button" aria-haspopup="dialog" aria-controls="engines-panel" hidden>⚙ Local engines</button>
+      <label class="free-view-label" hidden><span class="sr-only">View</span><select id="titlebar-view" aria-label="Window view"><option value="main">Monitor view</option><option value="panel">Side view</option><option value="free">Free form</option></select></label>
+      <button id="window-pin" type="button" aria-label="Keep window on top" aria-pressed="false" title="Keep window on top">◇</button>
+      <button id="window-minimize" type="button" aria-label="Minimize" title="Minimize">−</button>
+      <button id="window-maximize" type="button" aria-label="Maximize" title="Maximize">□</button>
+      <button id="window-close" type="button" aria-label="Close app" title="Close app">×</button>
+    </div>
+  </header>
+  <div class="bg"></div>
+  <aside id="image-dock" class="image-dock" aria-labelledby="image-title" hidden></aside>
+  <div class="app"><p id="filebanner" class="filebanner" hidden></p>
+
+    <!-- ══ TOP BAR ══ -->
+    <header class="topbar">
+      <div class="brand">✦ DUO VOICE HARNESS <span>// Autonomous Dual-AI Conversational Voice Runtime</span></div>
+      <div class="right">
+        <button id="activities-toggle" class="ghost" type="button" aria-expanded="false" aria-controls="activities-menu">✧ <span>Activities</span></button>
+        <button id="subagent-toggle" class="ghost" type="button" aria-expanded="false" aria-pressed="false" aria-controls="subagent-menu" hidden>◉ <span>Companion</span></button>
+        <button id="btn-minimize" class="ghost window-control" data-i18n-title="minimize_title" title="Minimize Duo Voice Harness">— <span data-i18n="minimize">Minimize</span></button>
+        <span id="vram" class="vram off" title="">VRAM —</span>
+        <span id="conn" class="conn checking" title="">◐ checking…</span>
+        <button id="view-toggle" class="ghost" type="button" popovertarget="view-menu" aria-controls="view-menu">▣ View</button>
+        <button hidden id="screen-toggle" class="ghost" title="Move to the side screen">🖥 <span id="screen-toggle-label">Side screen</span></button>
+        <button id="gear" class="ghost model-needed" aria-expanded="false" aria-controls="settings" data-i18n-title="settings_title" title="LLM and voice settings">⚙ <span data-i18n="settings">settings</span></button>
+      </div>
+    </header>
+
+    <section id="view-menu" class="view-menu" popover="auto" aria-label="View">
+      <div class="chats-heading"><strong>View</strong><button class="ghost" type="button" popovertarget="view-menu" popovertargetaction="hide" aria-label="Close View">×</button></div>
+      <div class="view-options"><button class="ghost" type="button" data-window-view="main">Monitor view</button><button class="ghost" type="button" data-window-view="panel">Side view</button><button class="ghost" type="button" data-window-view="free">Free form</button></div>
+      <div id="holodeck-choice" class="live-flow-choice"><label><input id="holodeck-toggle" type="checkbox" checked> ✧ Cyberpunk</label><p id="holodeck-help">Lattice conduits, voxel streams, and orbital geometry react to the conversation.</p></div>
+      <div id="live-flow-choice" class="live-flow-choice" hidden><label><input id="live-flow-toggle" type="checkbox"> Live flow</label><p id="live-flow-help">See You, context, model, and voice work together.</p></div>
+      <div id="momotamu-form-choice" class="live-flow-choice momotamu-form-choice"><fieldset><legend>Show Momotamu as:</legend><label><input type="radio" name="momotamu-form" value="character" checked> Character</label><label><input type="radio" name="momotamu-form" value="presence"> Presence</label></fieldset><p id="momotamu-form-help">Same Persona and voice.</p><label id="momotamu-idle-choice" class="momotamu-idle-choice"><span>Resting pose</span><select id="view-momotamu-idle" aria-label="Momotamu resting pose"></select></label></div>
+    </section>
+
+    <section id="activities-menu" class="activities-menu" aria-label="Choose an activity" hidden>
+      <div class="activities-menu-heading"><div><span>DUO VOICE HARNESS</span><strong>Choose an activity</strong></div><button id="activities-close" class="ghost" type="button" aria-label="Close activities">×</button></div>
+      <button class="activity-option" type="button" data-activity="chat" aria-pressed="true"><span class="activity-mark">◉</span><span><strong>Conversation</strong><small>Dual-AI conversation &amp; hands-free barge-in.</small></span><span class="activity-arrow">↗</span></button>
+      <button class="activity-option" type="button" data-activity="speech" aria-pressed="false"><span class="activity-mark">♫</span><span><strong>Speech</strong><small>Direct voice synthesis with VoxCPM2.</small></span><span class="activity-arrow">↗</span></button>
+      <button type="button" class="activity-option" data-activity="discussions" hidden>Discussions</button>
+    </section>
+
+    <section id="subagent-menu" class="subagent-menu" aria-label="Choose a discussion companion" hidden>
+      <div class="activities-menu-heading"><div><span>DISCUSSION PARTNER</span><strong>Choose a companion</strong></div><button id="subagent-close" class="ghost" type="button" aria-label="Close companion menu">×</button></div>
+      <button id="subagent-vivi" class="activity-option" type="button" data-subagent-choice="vivi" aria-pressed="true"><span class="activity-mark">✧</span><span><strong>Vivi</strong><small>Gentle, reflective companion.</small></span><span class="activity-arrow">↗</span></button>
+      <p class="activities-menu-note">Momotamu and Vivi converse autonomously using your selected local model and streaming voice references.</p>
+    </section>
+
+    <!-- ══ PERSONA RECIPE PANEL ══ -->
+    <section id="recipe-panel" class="recipe-panel" aria-labelledby="recipe-title" aria-label="Persona" hidden>
+      <header class="recipe-head">
+        <div class="recipe-title-lockup">
+          <span class="recipe-seal" aria-hidden="true">✿</span>
+          <div>
+            <span class="recipe-eyebrow">PERSONA</span>
+            <h2 id="recipe-title">Persona</h2>
+          </div>
+        </div>
+        <button id="recipe-close" class="ghost recipe-close" type="button" aria-label="Close Persona">×</button>
+      </header>
+      <p class="recipe-intro">Grounding holds. Her recipe holds and colors the task. The latest sentence sets the task and the subject.</p>
+      <div class="recipe-cast" role="group" aria-label="Whose next turn">
+        <button id="instruction-momotamu" class="recipe-tab" type="button" aria-pressed="true">Momotamu</button>
+        <button id="instruction-vivi" class="recipe-tab" type="button" aria-pressed="false">Vivi</button>
+      </div>
+      <p id="recipe-editor-note" class="recipe-intro"></p>
+
+      <div class="recipe-tabs" role="tablist" aria-label="Persona sections">
+        <button id="recipe-tab-character" class="recipe-tab" type="button" role="tab" aria-selected="true" aria-controls="recipe-pane-character" tabindex="0" data-recipe-tab="character">Character</button>
+        <button id="recipe-tab-response" class="recipe-tab" type="button" role="tab" aria-selected="false" aria-controls="recipe-pane-response" tabindex="-1" data-recipe-tab="response">Response</button>
+        <button id="recipe-tab-voice" class="recipe-tab" type="button" role="tab" aria-selected="false" aria-controls="recipe-pane-voice" tabindex="-1" data-recipe-tab="voice">Voice</button>
+      </div>
+
+      <div id="recipe-pane-character" class="recipe-pane" role="tabpanel" aria-labelledby="recipe-tab-character" data-recipe-pane="character">
+        <div class="recipe-pane-heading"><span id="recipe-character-kicker" class="recipe-eyebrow">MOMOTAMU DIRECTION</span><p id="recipe-character-help">Add character direction in your own words.</p></div>
+        <label class="recipe-field" for="recipe-direction"><span>Character direction</span>
+          <textarea id="recipe-direction" rows="3" maxlength="500">A warm, lively discussion companion. Be encouraging, concrete, and attentive to the user's actual question.</textarea>
+        </label>
+        <div class="recipe-counter-row"><span>Short notes work best.</span><span id="recipe-direction-count">0 / 500</span></div>
+        <fieldset class="recipe-fieldset">
+          <legend>Default tone</legend>
+          <div class="recipe-choice-grid recipe-tone-grid">
+            <button class="recipe-choice" type="button" data-recipe-tone="warm" aria-pressed="true"><span class="choice-glyph">☼</span><span><strong>Warm &amp; bright</strong><small>Encouraging and friendly</small></span></button>
+            <button class="recipe-choice" type="button" data-recipe-tone="calm" aria-pressed="false"><span class="choice-glyph">☾</span><span><strong>Calm &amp; steady</strong><small>Thoughtful and grounded</small></span></button>
+            <button class="recipe-choice" type="button" data-recipe-tone="playful" aria-pressed="false"><span class="choice-glyph">✧</span><span><strong>Playful &amp; lively</strong><small>Light and expressive</small></span></button>
+          </div>
+        </fieldset>
+      </div>
+
+      <div id="recipe-pane-response" class="recipe-pane" role="tabpanel" aria-labelledby="recipe-tab-response" data-recipe-pane="response" hidden>
+        <div class="recipe-pane-heading"><span id="recipe-response-kicker" class="recipe-eyebrow">REPLY DEPTH</span><p id="recipe-response-help">Control response length and detail.</p></div>
+        <fieldset class="recipe-fieldset">
+          <legend>Answer length</legend>
+          <div class="recipe-choice-grid recipe-length-grid">
+            <button class="recipe-choice" type="button" data-recipe-detail="brief" aria-pressed="true"><span><strong>Brief</strong><small>Concise, conversational</small></span></button>
+            <button class="recipe-choice" type="button" data-recipe-detail="balanced" aria-pressed="false"><span><strong>Balanced</strong><small>Natural depth</small></span></button>
+            <button class="recipe-choice" type="button" data-recipe-detail="expanded" aria-pressed="false"><span><strong>Expanded</strong><small>Full explanations</small></span></button>
+          </div>
+        </fieldset>
+        <label class="recipe-field" for="recipe-guidance"><span>Additional guidance <small>Optional</small></span>
+          <textarea id="recipe-guidance" rows="3" maxlength="360" placeholder="e.g. Keep conversational cadence unhurried."></textarea>
+        </label>
+        <div class="recipe-counter-row"><span>Guidance notes</span><span id="recipe-guidance-count">0 / 360</span></div>
+      </div>
+
+      <div id="recipe-pane-voice" class="recipe-pane" role="tabpanel" aria-labelledby="recipe-tab-voice" data-recipe-pane="voice" hidden>
+        <div class="recipe-pane-heading"><span class="recipe-eyebrow">CHARACTER VOICES</span><p>Choose how Momotamu and Vivi sound. Language applies to previews and conversation speech.</p></div>
+        <label class="recipe-field" for="recipe-voice-actor"><span>Preview character</span><select id="recipe-voice-actor"><option value="momotamu">Momotamu</option><option value="vivi">Vivi</option></select></label>
+        <div class="recipe-field"><span>Speech language</span><button id="recipe-language-open" class="ghost" type="button" aria-haspopup="dialog" aria-controls="persona-language-panel">English · Choose language…</button><p class="recipe-voice-note">One language setting for both characters. This guides pronunciation; it does not translate replies.</p></div>
+        <div class="recipe-voice-list" aria-label="Selected character reference recordings">
+          <div class="recipe-voice-card" data-voice-profile="momotamu.selected"><span class="voice-language-mark">M</span><span class="voice-file"><strong>Momotamu</strong><small>Original Japanese Reference</small></span><span class="voice-status">On file</span></div>
+          <div class="recipe-voice-card" data-voice-profile="vivi.selected"><span class="voice-language-mark">V</span><span class="voice-file"><strong>Vivi</strong><small>Original English Reference</small></span><span class="voice-status">On file</span></div>
+        </div>
+        <p class="recipe-voice-note">These bundled references belong to the local VoxCPM2 route. Hosted providers use the voices selected in Voices. Language support and pronunciation depend on your provider, model and voice. Regional Chinese previews use a shared Chinese sample; try your own dialect text in Speech.</p>
+        <p id="recipe-voice-status" class="recipe-voice-note" role="status">Checking local reference recordings…</p>
+        <div class="row-actions"><button id="recipe-voice-preview" class="ghost" type="button">Preview voice</button><button id="recipe-voice-preview-stop" class="ghost" type="button" hidden>Stop preview</button></div>
+      </div>
+
+      <details class="recipe-preview" open>
+        <summary><span><span class="recipe-eyebrow">NEXT TURN</span><strong>Instruction layers</strong></span><span class="preview-mark" aria-hidden="true">⌄</span></summary>
+        <pre id="recipe-preview-text"></pre>
+      </details>
+      <details class="recipe-preview">
+        <summary><span><span class="recipe-eyebrow">MODEL TEXT</span><strong>Exact instruction</strong></span><span class="preview-mark" aria-hidden="true">⌄</span></summary>
+        <pre id="recipe-instruction-exact"></pre>
+      </details>
+
+      <footer class="recipe-footer">
+        <button id="recipe-reset" class="ghost recipe-reset" type="button">Restore defaults</button>
+        <span id="recipe-save-status" class="recipe-save-status" role="status">Saved on this device</span>
+      </footer>
+    </section>
+
+    <!-- ══ SETTINGS ══ -->
+    <section id="settings" class="settings" role="dialog" aria-modal="false" aria-labelledby="settings-title" hidden>
+      <header class="settings-head"><div class="settings-brand-lockup"><img class="settings-brand-logo" src="assets/sparklesnap-google-logo-v1.jpg" alt="SparkleSnap — Create, learn, and explore"><div><span class="settings-eyebrow">DUO VOICE HARNESS</span><h2 id="settings-title">Settings</h2></div></div><button id="settings-close" class="ghost" type="button" aria-label="Close Settings">×</button></header>
+      <div class="settings-model-entry"><div class="settings-model-copy"><h3>Gemma 4 · 12B</h3><p id="settings-model-summary">Local multimodal LLM for duo reasoning and dialogue coordination.</p></div><button id="btn-loadmodel" class="primary" type="button" aria-haspopup="dialog" aria-controls="model-panel" aria-expanded="false" title="Load and tune Gemma">Gemma <span aria-hidden="true">↗</span></button></div>
+      <div class="settings-gpu-row"><div class="gpu-readout" id="gpu-settings" role="status">Checking global GPU memory…</div><button id="gpu-refresh" class="ghost" type="button">Refresh GPU status</button></div>
+      <div class="settings-engine-entry"><button id="btn-local-engines" class="primary" type="button" aria-haspopup="dialog" aria-controls="engines-panel">Local engines</button><button id="btn-voice-settings" class="ghost" type="button" aria-haspopup="dialog" aria-controls="voice-panel">Voices</button><button id="btn-audio-input" class="ghost" type="button" aria-haspopup="dialog" aria-controls="audio-input-panel">Audio input</button><button id="btn-resources" class="ghost" type="button" aria-haspopup="dialog" aria-controls="resources-panel">Resources</button></div>
+      <details id="developer-connection" class="developer-connection"><summary>Developer connection…</summary>
+        <h3 class="settings-section-title">Connection</h3>
+        <label><span data-i18n="provider">LLM provider</span>
+          <select id="cfg-provider">
+            <option value="local-llama" selected>Built-in llama.cpp (local GGUF)</option>
+            <option value="lmstudio" data-i18n="provider_lmstudio">LM Studio (local)</option>
+            <option value="ollama" data-i18n="provider_ollama">Ollama (local)</option>
+            <option value="openrouter" data-i18n="provider_openrouter">OpenRouter (cloud)</option>
+            <option value="custom" data-i18n="provider_custom">Custom</option>
+          </select>
+        </label>
+        <label id="provider-url-label"><span>Provider Base URL</span><input id="cfg-url" type="text" placeholder="http://localhost:1234/v1"></label>
+        <label id="provider-model-label"><span data-i18n="model">Model to load</span><input id="cfg-model" type="text" placeholder="google/gemma-4-12b-qat"></label>
+        <div id="local-model-options" class="local-model-options" hidden>
+          <label><span>Local GGUF model</span><div class="local-model-pick"><input id="cfg-local-model" type="text" readonly placeholder="Choose a .gguf model file"><button id="btn-pick-local-model" class="ghost">Choose…</button></div></label>
+          <label><span>Vision projector (optional)</span><div class="local-model-pick"><input id="cfg-local-projector" type="text" readonly placeholder="Choose a matching mmproj .gguf"><button id="btn-pick-local-projector" class="ghost">Choose…</button></div></label>
+          <label><span>Context size</span><select id="cfg-local-context"><option value="4096">4,096 tokens</option><option value="8192">8,192 tokens</option><option value="12288" selected>12,288 tokens</option><option value="16384">16,384 tokens</option></select></label>
+        </div>
+        <div id="provider-key-label"><label><span>API key</span><input id="cfg-key" type="password" autocomplete="off" spellcheck="false" placeholder="Paste a new key to replace the saved key"></label><p id="credential-status" role="status">Keys are managed by the desktop app.</p><label class="credential-choice"><input id="cfg-key-session" type="checkbox"> Keep a new key only until the app closes</label><button id="cfg-key-remove" class="ghost" type="button">Remove saved key</button></div>
+        <label hidden><span data-i18n="temp">Temperature</span><input id="cfg-temp" type="number" min="0" max="2" step="0.1" value="0.45"></label>
+        <div class="row-actions">
+          <button id="btn-start-model" hidden class="primary" type="button">Load selected model</button>
+        </div>
+        <button id="model-other-local" class="ghost" type="button" data-model-edit>Local GGUF files…</button>
+      </details>
+      <h3 class="settings-section-title">Appearance</h3>
+      <label><span>View</span><select id="window-view"><option value="main">Monitor view</option><option value="panel">Side view</option><option value="free">Free form</option></select></label>
+      <label><span>Momotamu visual form</span><select id="cfg-momotamu-form"><option value="character">Character</option><option value="presence">Presence</option></select></label>
+      <label id="cfg-momotamu-idle-row"><span>Momotamu resting pose</span><select id="cfg-momotamu-idle" aria-label="Momotamu resting pose"></select></label>
+      <label><span data-i18n="theme_label">Appearance</span><select id="cfg-theme"><option value="dark" data-i18n="theme_dark">Dark theme</option><option value="light" data-i18n="theme_light">Light theme</option></select></label>
+      <label class="chk"><input id="cfg-always-on-top" type="checkbox"> <span data-i18n="always_on_top">Keep window on top</span></label>
+      <div class="row-actions restart-row">
+        <button id="btn-stop-local-model" class="ghost danger" hidden>Stop AI model</button>
+        <button id="btn-restart" class="ghost danger" data-i18n-title="restart_title" title="Restart the app">⟳ <span data-i18n="restart">Restart app</span></button>
+      </div>
+      <footer class="settings-footer row-actions"><button id="cfg-save" class="primary" data-i18n="save">Save &amp; test connection</button><span id="cfg-status" class="muted" role="status"></span></footer>
+    </section>
+
+    <!-- ══ DUO MASCOT STAGE ══ -->
+    <section id="conversation-workbench" class="conversation-workbench">
+      <section class="stage" data-subagent="vivi">
+        <canvas id="stage-holodeck" class="stage-holodeck" aria-hidden="true"></canvas>
+        <div class="mascot momotamu" id="momotamu-stage">
+          <div class="bubble momotamu-bubble" id="momotamu-bubble"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <canvas class="sprite" id="momotamu-sprite" width="384" height="512" aria-label="Momotamu, lead conversation companion"></canvas>
+          <div class="mascot-name momotamu-name"><span class="actor-label">Momotamu</span><span id="momotamu-state" class="actor-state"></span></div>
+        </div>
+        <div class="vs" id="mascot-divider">✧</div>
+        <div class="mascot vivi-doll" id="vivi-stage">
+          <div class="bubble vivi-bubble" id="vivi-bubble"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <canvas class="sprite" id="vivi-sprite" width="384" height="512" aria-label="Vivi, reflective companion"></canvas>
+          <div class="mascot-name vivi-name"><span class="actor-label">Vivi</span><span id="vivi-state" class="actor-state"></span></div>
+        </div>
+        <div class="stage-tools">
+          <button id="recipe-toggle" class="ghost recipe-toggle" type="button" aria-expanded="false" aria-controls="recipe-panel">✿ Persona</button>
+        </div>
+      </section>
+    </section>
+
+    <!-- ══ CONVERSATION LOG ══ -->
+    <section class="logwrap">
+      <div class="log-head">
+        <div class="chat-identity">
+          <span id="conversation-heading">Conversation</span>
+          <div id="session-current-info" class="chat-context" hidden>
+            <span id="session-current">New chat</span>
+            <button id="chats-toggle" class="ghost" type="button" popovertarget="session-controls" aria-expanded="false" aria-controls="session-controls" hidden>Chats</button>
+            <button id="session-new-quick" class="ghost" type="button" hidden>+ New chat</button>
+            <span id="worktree-summary" class="worktree-summary">No shared context</span>
+          </div>
+        </div>
+        <div id="participant-chips" class="participant-chips" role="group" aria-labelledby="participant-chips-label"><span id="participant-chips-label" class="sr-only">Conversation mode</span></div>
+        <div class="chat-actions"></div>
+        <span class="log-tag" id="log-tag"></span>
+      </div>
+
+      <div id="session-controls" class="session-controls" popover="auto" aria-labelledby="chats-title" hidden>
+        <div class="chats-heading"><strong id="chats-title">Chats</strong><button id="chats-close" class="ghost" type="button" popovertarget="session-controls" popovertargetaction="hide" aria-label="Close Chats">×</button></div>
+        <div class="session-row"><label for="session-select">Saved sessions</label><select id="session-select" aria-label="Saved sessions"></select><button id="session-new" class="ghost" type="button">New chat</button><button id="session-delete" class="ghost" type="button">Delete</button></div>
+        <div class="worktree-row"><select id="session-worktree-filter" aria-label="Filter saved sessions by worktree"><option value="all">All worktrees</option><option value="none">Ungrouped</option></select><button id="worktree-edit" class="ghost" type="button">Worktree</button></div>
+        <details id="session-tools"><summary>Session options</summary>
+        <button id="backstage-toggle" class="ghost backstage-toggle" type="button" aria-haspopup="dialog" aria-controls="backstage-panel" hidden>Character notebooks (Backstage)</button>
+        <div class="session-row"><input id="session-title" maxlength="120" aria-label="Session title" placeholder="Session title"><button id="session-rename" class="ghost" type="button">Rename</button></div>
+        <p id="session-status" class="session-status" role="status"></p>
+        <details id="session-memory-panel" hidden><summary>Discussion Master · optional memory</summary><label class="session-status"><input id="session-memory-enabled" type="checkbox"> Summarize with the same model between turns</label><p class="session-status">Keeps a compressed memory plus recent exact dialogue. Adds model requests and may lose details. The complete session is always preserved.</p><p id="session-memory-status" class="session-status" role="status"></p><p id="session-memory-text" class="session-path"></p></details>
+        <div id="backstage-settings" class="backstage-settings" hidden><label class="session-status"><input id="backstage-enabled" type="checkbox"> Enable Backstage notebooks</label><div class="session-row"><label for="backstage-interval">Write after</label><select id="backstage-interval"><option value="1">Every reply</option><option value="2">2 replies each</option><option value="3" selected>3 replies each</option><option value="5">5 replies each</option><option value="8">8 replies each</option></select><select id="backstage-tone" aria-label="Backstage tone"><option value="gentle">Gentle mischief</option><option value="sibling" selected>Sibling sparks</option><option value="spicy">Spicier banter</option></select></div><label class="session-status"><input id="backstage-reveal-end" type="checkbox"> Reveal latest notes when this round ends (+2 reaction turns)</label><p class="session-status">Short fictional diary entries, private from the partner until you Reveal. Uses the same model; adds occasional requests.</p></div>
+        <details id="session-document" hidden><summary>Public transcript export</summary><p id="session-path" class="session-path"></p><div class="session-row"><button id="session-open" class="ghost" type="button">Export &amp; open Markdown</button><button id="session-reveal" class="ghost" type="button">Show session folder</button></div><p class="session-status">Optional ai-discussion.md export. Saved sessions hold the full history. Unrevealed notebook entries are excluded.</p></details>
+        </details>
+      </div>
+
+      <input id="session-delete-export" type="checkbox" hidden><dialog id="session-delete-dialog" class="session-delete-dialog" aria-labelledby="session-delete-title">
+        <h2 id="session-delete-title">Delete chat?</h2>
+        <p id="session-delete-copy" class="session-status"></p>
+        <div class="session-row"><button id="session-delete-cancel" class="ghost" type="button">Cancel</button><button id="session-delete-confirm" class="ghost danger" type="button">Delete</button></div>
+      </dialog>
+
+      <button id="btn-copy-all" class="ghost log-copy" type="button" data-i18n="copy_all">Copy conversation</button>
+      <div id="voice-speech-choice" class="voice-speech-choice" hidden>
+        <p id="voice-speech-choice-copy"></p>
+        <div class="voice-speech-actions"><button id="voice-speech-enable" class="primary" type="button">Speak new replies</button><button id="voice-speech-text-only" class="ghost" type="button">Keep text only</button></div>
+      </div>
+      <div class="log" id="log"></div>
+    </section>
+
+    <!-- ══ AUDIO INPUT PANEL ══ -->
+    <dialog id="audio-input-panel" class="engine-window audio-input-window" aria-labelledby="audio-input-title">
+      <header class="model-head"><h2 id="audio-input-title">Audio input &amp; Room Calibration</h2><button id="audio-input-close" class="ghost" type="button" aria-label="Close audio input">×</button></header>
+      <label for="listen-device">Microphone<select id="listen-device"><option value="">System default microphone</option></select></label>
+      <p class="local-model-note">Used by Hands-free full duplex and Speech input.</p>
+      <div class="row-actions"><button id="listen-devices" class="ghost" type="button">Refresh inputs</button><button id="audio-input-check" class="primary" type="button">Check microphone</button><button id="audio-input-check-stop" class="ghost" type="button" hidden>Stop check</button></div>
+      <p id="audio-input-disabled-note" class="local-model-note" role="status"></p>
+      <div class="audio-input-level"><label for="audio-input-meter">Microphone level</label><meter id="audio-input-meter" min="0" max="1" value="0">0</meter></div>
+      <details class="hands-free-guide" open>
+        <summary>Full-Duplex Barge-In with Backchannel Immunity</summary>
+        <p>Enable Hands-free to speak during a reply. Brief sounds above the echo threshold acknowledge the speaker. Sustained speech interrupts after about 0.85–1.2 seconds; pause for 0.85 seconds to send. Calibration reduces speaker feedback; headphones give the clearest separation.</p>
+        <label for="hands-free-sensitivity">Microphone sensitivity</label>
+        <select id="hands-free-sensitivity"><option value=".009">High · quiet speech</option><option value=".018" selected>Balanced</option><option value=".035">Low · noisy room</option></select>
+        <div class="row-actions"><button id="hands-free-calibrate" class="ghost" type="button">Calibrate room &amp; speakers</button></div>
+        <p id="hands-free-calibration-status" class="local-model-note" role="status">Room calibration adapts acoustic coupling to prevent speaker echo false-triggers.</p>
+      </details>
+      <div id="audio-input-status" role="status">Microphone ready.</div>
+    </dialog>
+
+    <!-- ══ LOCAL ENGINES PANEL ══ -->
+    <dialog id="engines-panel" class="engine-window" aria-labelledby="engines-title">
+      <header class="model-head"><h2 id="engines-title">Local engines</h2><button id="engines-close" class="ghost" type="button" aria-label="Close local engines">×</button></header>
+      <p class="engine-intro">Local Gemma runs the conversation. For local speech, install VoiceGen Oui: WSL, ROCm, a Python environment, and the VoxCPM2 weights. An RX 7900 XTX can run that setup once it is installed. Text only, DIY, ElevenLabs, and Cartesia are available on their own.</p>
+      <section class="engine-row"><div><h3>Gemma 4 · 12B</h3><div id="engine-model-status" role="status">Checking model status…</div></div><div class="engine-controls"><button id="engine-model-load" class="primary" type="button">Load AI model</button><button id="engine-model-stop" class="ghost danger" type="button">Stop AI model</button><button id="engine-model-setup" class="ghost" type="button">Gemma setup ↗</button></div></section>
+      <section class="engine-row"><div><h3>VoiceGen · VoxCPM2</h3><div id="engine-voice-status" role="status">Checking voice status…</div></div><div class="engine-controls"><button id="engine-voice-start" class="primary" type="button">Start voice</button><button id="engine-voice-warmup" class="ghost" type="button" title="Prepare voice silently before first reply.">Warm up voice</button><button id="engine-voice-stop" class="ghost danger" type="button">Stop voice</button><button id="engine-voice-setup" class="ghost" type="button">Voice setup ↗</button></div></section>
+      <div id="engine-gpu-status" class="gpu-readout" role="status"></div>
+      <div class="engine-controls"><button id="engine-release" class="ghost danger" type="button">Release engines</button><button id="engine-share-setup" class="ghost" type="button">Explain setup in conversation</button><button id="engine-refresh" class="ghost" type="button">Refresh status</button><button id="engine-resources" class="ghost" type="button">Resources ↗</button></div>
+      <details><summary>Technical peek</summary><pre id="engine-technical" class="model-log"></pre></details>
+      <p id="engine-disabled-note" class="local-model-note" role="status"></p>
+      <div id="engine-feedback" class="model-feedback" role="status"></div>
+    </dialog>
+
+    <!-- ══ VOICEGEN DIALOG ══ -->
+    <dialog id="voice-panel" class="engine-window" aria-labelledby="voice-title">
+      <header class="model-head voice-setup-head"><div><h2 id="voice-title">Voices</h2><p>Give Momotamu and Vivi a voice of their own.</p></div><button id="voice-close" class="ghost" type="button" aria-label="Close voice setup">×</button></header>
+      <div class="voice-setup-body" id="voice-setup-body" tabindex="0" aria-label="Voice setup options">
+        <label for="voice-provider">Voice provider<select id="voice-provider"><option value="voxcpm2">VoiceGen / VoxCPM2 · featured local route</option><option value="diy">DIY speech server</option><option value="elevenlabs">ElevenLabs · your account</option><option value="cartesia">Cartesia · your account</option><option value="off">Text only · no speech generation</option></select></label>
+        <p id="voice-provider-description" class="voice-hint"></p>
+        <section id="voice-local-setup" aria-label="Local voice setup">
+          <div class="row-actions"><button id="btn-start-voice" class="primary" type="button">Start voice</button><button id="voice-warm" class="ghost" type="button">Warm up</button><button id="btn-check-voice" class="ghost" type="button">Check status</button><button id="btn-stop-voice" class="ghost danger" type="button">Stop engine</button></div>
+          <p id="voice-backend-status" class="voice-hint" role="status">Install VoiceGen Oui first: WSL, ROCm, a Python environment, and the VoxCPM2 weights. Start voice looks for that setup. An RX 7900 XTX can run it once those pieces are in place.</p>
+          <details><summary>Local server address</summary><label>VoiceGen URL<input id="cfg-voice-url" type="text" placeholder="http://127.0.0.1:3234" spellcheck="false"></label></details>
+        </section>
+        <section id="voice-connection-setup" hidden aria-label="Voice connection">
+          <details id="voice-connection-details" open><summary id="voice-connection-summary">Connect your provider</summary>
+          <label id="voice-connection-row" for="voice-connection">Saved connection<select id="voice-connection"><option value="">New connection…</option></select></label>
+          <label id="voice-server-row" for="voice-server">Speech server address<input id="voice-server" type="url" placeholder="http://127.0.0.1:3235" spellcheck="false"></label>
+          <div id="voice-key-row"><label for="voice-key">API key<input id="voice-key" type="password" autocomplete="off" spellcheck="false" placeholder="Paste a key; saved keys stay hidden"></label><div class="voice-key-tools"><span id="voice-key-status" class="voice-hint">No saved key.</span><button id="voice-key-remove" class="ghost" type="button">Remove key</button></div><label class="chk"><input id="voice-key-session" type="checkbox"> Keep a new key only until the app closes</label></div>
+          <label id="voice-remote-row" class="chk"><input id="voice-remote-allow" type="checkbox"> Allow remote voice connections</label><p id="voice-cancel-note" class="voice-hint">Stopping playback may not prevent provider charges.</p>
+          <button id="voice-connect" class="ghost" type="button">Check connection &amp; find voices</button>
+          <p class="voice-hint">Checking saves this connection and protects a new key. It generates no audio.</p>
+          </details>
+          <p id="voice-cloud-note" class="voice-hint"></p>
+        </section>
+        <section id="voice-cast" class="voice-cast" aria-labelledby="voice-cast-title">
+          <h3 id="voice-cast-title">Your duo</h3>
+          <label id="voice-model-row" for="voice-model" hidden>Speech model<select id="voice-model"><option value="">Check the connection first</option></select></label>
+          <div class="voice-companion"><label for="voice-momotamu"><span class="voice-person-name"><i aria-hidden="true"></i>Momotamu</span><select id="voice-momotamu" aria-label="Momotamu’s voice"></select></label><button id="voice-preview-momotamu" class="ghost" type="button" aria-label="Preview Momotamu’s voice">▶ Preview</button></div>
+          <div class="voice-companion"><label for="voice-vivi"><span class="voice-person-name vivi"><i aria-hidden="true"></i>Vivi</span><select id="voice-vivi" aria-label="Vivi’s voice"></select></label><button id="voice-preview-vivi" class="ghost" type="button" aria-label="Preview Vivi’s voice">▶ Preview</button></div>
+          <div class="voice-preview-line"><p id="voice-preview-note" class="voice-hint">Preview plays a short sentence.</p><button id="voice-preview-stop" class="ghost danger" type="button" hidden>Stop preview</button></div>
+          <p id="voice-capability-note" class="voice-hint"></p>
+        </section>
+        <div id="voice-reply-options"><p class="voice-hint">A saved voice provider speaks new conversation replies. Text only leaves them written.</p><p class="voice-hint">Choose speech language in Persona → Voice.</p><select id="cfg-voice-language" aria-label="Saved speech language" hidden></select></div>
+        <details id="voice-playback-options"><summary>Playback &amp; connection policy</summary>
+          <label>Speak through<select id="voice-output-mode"><option value="speakers">Normal speakers</option><option value="meeting">Meeting device · experimental</option></select></label>
+          <label id="voice-output-device-wrap" hidden>Installed output device<select id="voice-output-device"><option value="">Choose an output device</option></select></label>
+          <p id="voice-output-note" class="voice-hint">Uses your usual audio system.</p>
+          <div class="row-actions"><button id="voice-output-refresh" class="ghost" type="button">Refresh devices</button><button id="voice-output-test" class="ghost" type="button">Preview on this output</button></div>
+          <label class="chk"><input id="voice-local-only" type="checkbox" checked> Keep voice connections on this computer</label><p class="voice-hint">Blocks remote speech services. Saved chats and exported audio are kept.</p>
+          <button id="voice-resources" class="ghost" type="button">Resources &amp; data folders ↗</button>
+        </details>
+      </div>
+      <footer class="voice-setup-footer"><div id="voice-settings-status" role="status" aria-live="polite">Save to use these voices.</div><button id="voice-save" class="primary" type="button">Save voices</button></footer>
+    </dialog>
+
+    <dialog id="source-panel" class="engine-window" aria-labelledby="source-title">
+      <header class="model-head"><h2 id="source-title">Document for this chat</h2><button id="source-close" class="ghost" type="button" aria-label="Close document setup">×</button></header>
+      <div class="source-options">
+        <p>Paste text, or choose a .txt or Markdown file. It is saved with this chat, and both companions receive it through the language model you selected. The current size, 12,000 characters, is one I am still trying. Tell me what you needed. PDF reading is planned for a later update.</p>
+        <button id="source-pick" class="ghost" type="button">Choose text file</button>
+        <label for="source-name">Document name<input id="source-name" type="text" maxlength="120" placeholder="My notes"></label>
+        <label for="source-text">Source text<textarea id="source-text" rows="9" maxlength="12000" spellcheck="false" placeholder="Paste the text you want both companions to use."></textarea></label><p id="source-count">0 / 12,000 characters</p>
+        <label for="source-mode">How to use this text<select id="source-mode"><option value="document-only">Use only this text</option><option value="general">Also use outside knowledge</option></select></label>
+        <p id="source-policy-note"></p>
+      </div>
+      <footer class="source-footer"><p id="source-status" role="status" aria-live="polite"></p><div class="row-actions"><button id="source-remove" class="ghost danger" type="button">Detach</button><button id="source-use" class="primary" type="button">Use text</button></div></footer>
+    </dialog>
+
+    <!-- ══ RESOURCES DIALOG ══ -->
+    <dialog id="resources-panel" class="engine-window" aria-labelledby="resources-title">
+      <header class="model-head"><h2 id="resources-title">Resources</h2><button id="resources-close" class="ghost" type="button" aria-label="Close resources">×</button></header>
+      <section class="engine-row"><h3>Gemma 4 · 12B QAT</h3><p>Local GGUF language model weights and audio projector:</p><ul><li><code>gemma-4-12B-it-QAT-Q4_0.gguf</code></li><li><code>mmproj-gemma-4-12B-it-QAT-BF16.gguf</code></li></ul></section>
+      <section class="engine-row"><h3>VoiceGen · VoxCPM2</h3><p>Install VoiceGen Oui for the ROCm Python environment, then download the VoxCPM2 weights. Start voice looks for that setup.</p></section>
+      <section class="engine-row"><h3>Your data on this device</h3><p>Chat text is saved locally. Reply audio stays in this window’s memory: up to 24 takes or 64 MiB, with older takes released first. Use Save audio beside a reply to keep a WAV.</p><div class="engine-controls"><button id="data-conversations" class="ghost" type="button">Open chats folder</button><button id="data-application" class="ghost" type="button">Open app data</button><button id="data-clear-audio" class="ghost" type="button">Clear chat replay audio</button></div><p id="data-status" role="status" aria-live="polite">Clearing replay audio keeps saved chat text, exported WAVs and existing voice archives.</p></section>
+    </dialog>
+
+    <!-- ══ GEMMA MODEL PANEL ══ -->
+    <dialog id="model-panel" class="model-panel" aria-labelledby="model-title">
+      <header class="model-head"><div><span class="model-eyebrow">SETTINGS · LOCAL GEMMA</span><h2 id="model-title">Gemma’s engine</h2></div><button id="model-close" class="ghost" type="button" aria-label="Close Gemma engine">×</button></header>
+      <section id="model-gemma" class="model-gemma" aria-labelledby="model-gemma-title">
+        <div class="model-gemma-heading"><div><span class="model-gemma-local">ON THIS COMPUTER</span><h3 id="model-gemma-title">Gemma 4 <span>12B QAT</span></h3></div><button id="model-help-toggle" class="model-help-toggle" type="button" popovertarget="model-help" aria-haspopup="dialog" aria-controls="model-help" aria-expanded="false" aria-label="Compare Gemma and other model connections">?</button></div>
+        <p class="model-gemma-intro">Conversation, images and long listening — together.</p>
+        <p class="model-gemma-features">Listen &amp; Reflect <span>·</span> Image view <span>·</span> Document tools</p>
+        <div class="model-gemma-actions"><button id="model-gemma-select" class="primary" type="button" data-model-edit>Use Gemma setup</button><a id="model-gemma-link" href="https://huggingface.co/lmstudio-community/gemma-4-12B-it-QAT-GGUF/tree/main" target="_blank" rel="noopener noreferrer">Get model files <span aria-hidden="true">↗</span></a></div>
+        <p id="model-gemma-status" class="model-hint" role="status"></p>
+      </section>
+      <div id="model-help" class="model-help" popover role="dialog" aria-labelledby="model-help-title">
+        <header><h3 id="model-help-title">What changes with the model?</h3><button type="button" popovertarget="model-help" popovertargetaction="hide" aria-label="Close model comparison">×</button></header>
+        <dl>
+          <div><dt>Gemma in the built-in engine</dt><dd>Runs on this computer with its matching projector. Enables microphone Listen &amp; Reflect, images, document tools and exact text token counts.</dd></div>
+          <div><dt>Another local GGUF</dt><dd>Uses the same engine controls. Images need a compatible model and projector; document tools need function calling. Text counts use the local tokenizer. Listen &amp; Reflect needs Gemma 4 12B.</dd></div>
+          <div><dt>LM Studio, Ollama &amp; cloud</dt><dd>Chat, images and document tools depend on the selected model and server. Text counts are estimates, even for Gemma in LM Studio. Cloud connections send submitted material to the provider.</dd></div>
+        </dl>
+        <p>Voice reply sends the recording to the built-in Gemma pair. Dictate uses Windows speech and does not load a model. Spoken replies use Settings → Voices.</p>
+        <a class="model-gemma-help-link" href="https://huggingface.co/lmstudio-community/gemma-4-12B-it-QAT-GGUF/tree/main" target="_blank" rel="noopener noreferrer">Gemma GGUF files on Hugging Face <span aria-hidden="true">↗</span></a>
+      </div>
+      <p id="model-provider-note" class="model-hint"></p><p id="model-selection" class="model-saved-choice"></p>
+      <section class="model-resident"><span id="model-state" class="model-state">○ Local engine stopped</span><h3 id="model-loaded-name">No built-in model loaded</h3><p id="model-loaded-file" class="model-path"></p><dl id="model-facts" class="model-facts"></dl></section>
+      <div class="model-actions"><button id="model-start" class="primary" type="button">Load AI model</button><button id="model-stop" class="ghost danger" type="button">Stop AI model</button></div>
+      <div id="model-feedback" class="model-feedback" role="status"></div>
+      <details id="model-response-section"><summary>Response controls <span>Next run · no reload</span></summary><p class="model-hint">Control the length and style of conversation replies.</p><div id="model-response-knobs" class="model-knobs"></div><button id="model-response-save" class="ghost" type="button">Apply response settings</button><p class="model-hint">Top-k, min-p and repetition penalty apply to built-in llama.cpp. Other providers receive the compatible controls.</p></details>
+      <details id="model-engine-section"><summary>Model &amp; engine <span>Save, then reload</span></summary>
+        <div class="model-preset-row"><button id="model-preset" class="ghost" type="button" data-model-edit>Apply Duo Voice Harness setup</button><p id="model-preset-status" class="model-hint"></p></div>
+        <p class="model-hint">Google sampling: temperature 1.0 · top-p 0.95 · top-k 64. Duo Voice Harness adds a 12,288-token context, 256 physical batch, 560 image tokens and direct replies. This is an app preset, not a Google engine default.</p>
+        <label class="model-field">Read Gemma files from<select id="model-location" data-model-edit><option value="lmstudio">LM Studio model folder</option><option value="app">Duo Voice Harness model folder</option><option value="custom">Chosen files</option></select></label><p id="model-location-status" class="model-hint"></p><button id="model-open-folder" class="ghost" type="button">Open Duo Voice Harness model folder</button>
+        <label class="model-field">Model file<div class="model-pick"><input id="model-file" type="text" readonly><button id="model-pick-model" class="ghost" type="button" data-model-edit>Choose…</button></div></label>
+        <label class="model-field">Matching projector · required for audio and images<div class="model-pick"><input id="model-projector" type="text" readonly><button id="model-pick-projector" class="ghost" type="button" data-model-edit>Choose…</button><button id="model-projector-clear" class="ghost" type="button" data-model-edit>Text only</button></div></label>
+        <div id="model-engine-knobs" class="model-knobs engine-knobs"></div>
+        <p class="model-hint">Context is capacity; the app still sends bounded recent dialogue. More context and GPU layers can use more VRAM. 0 CPU threads means automatic. GPU layers are a requested maximum. Thinking consumes the reply token allowance; 0 keeps these short replies direct. One inference slot stays fixed.</p>
+        <button id="model-engine-save" class="ghost" type="button">Save engine choices</button><p class="model-hint">Saving engine choices selects built-in llama.cpp. Loading remains explicit.</p>
+      </details>
+      <p id="model-pending" class="model-pending"></p>
+      <details class="model-diagnostics"><summary>Engine log <span>Owned process only</span></summary><pre id="model-log">No local engine log yet.</pre></details>
+      <div class="gpu-readout" id="gpu-model" role="status"></div><footer class="model-footer"><button id="model-provider" class="ghost" type="button">Connection settings</button><button id="model-refresh" class="ghost" type="button">Refresh status</button></footer>
+    </dialog>
+
+    <!-- ══ WORKTREE DIALOG ══ -->
+    <dialog id="worktree-panel" class="worktree-panel" aria-labelledby="worktree-heading">
+      <header><h2 id="worktree-heading">Worktree</h2><button id="worktree-close" class="ghost" type="button" aria-label="Close Worktree">×</button></header>
+      <section class="worktree-section">
+        <h3>This chat</h3>
+        <label for="worktree-select">Worktree</label>
+        <select id="worktree-select"></select>
+        <p class="worktree-hint">Chats in one worktree share a single Markdown file.</p>
+      </section>
+      <section class="worktree-section">
+        <h3>New worktree</h3>
+        <div class="worktree-create"><input id="worktree-name" type="text" maxlength="64" placeholder="e.g. job-interview" aria-label="New worktree name"><button id="worktree-create" class="ghost" type="button">Create</button></div>
+        <p class="worktree-hint">Dictate speaks this name. It does not need an AI model.</p>
+      </section>
+      <section class="worktree-section worktree-notes">
+        <label for="worktree-context">Shared notes</label>
+        <p class="worktree-hint">These notes go with each turn in this worktree. Dictate here if you want to speak them.</p>
+        <textarea id="worktree-context" maxlength="24000" rows="8"></textarea>
+        <p id="worktree-path" class="worktree-path"></p>
+      </section>
+      <footer class="worktree-footer">
+        <div class="worktree-actions"><button id="worktree-save" class="primary" type="button">Save notes</button><button id="worktree-update" class="ghost" type="button">Update from this chat</button></div>
+        <div class="worktree-actions"><button id="worktree-reload" class="ghost" type="button">Reload</button><button id="worktree-open" class="ghost" type="button">Open file</button></div>
+        <p id="worktree-status" role="status">Choose a worktree, then edit its shared notes.</p>
+      </footer>
+    </dialog>
+
+    <!-- ══ COMPOSER CONSOLE ══ -->
+<section id="speech-panel" class="speech-panel" hidden aria-labelledby="speech-title">
+      <header><h2 id="speech-title">Speech</h2><p>Give your words a voice. Audio stays in memory for this session; choose Save audio to keep a WAV.</p></header>
+      <p id="speech-route-note" class="speech-take" aria-live="polite"></p>
+      <form id="speech-form">
+        <label for="speech-text">Text</label><textarea id="speech-text" rows="6" maxlength="8000" placeholder="The exact words you want to hear…" aria-describedby="speech-count"></textarea>
+        <p id="speech-count" class="speech-count">0 / 8,000</p>
+        <div class="speech-options"><label for="speech-voice">Voice<select id="speech-voice"><option value="momotamu">Momotamu</option><option value="vivi">Vivi</option></select></label><div class="speech-language-info"><span>Language from Persona</span><output id="speech-language" aria-live="polite">English</output><button id="speech-language-change" class="ghost" type="button" aria-haspopup="dialog" aria-controls="persona-language-panel">Change in Persona…</button></div></div>
+        <details class="voice-delivery"><summary>Voice Direction</summary><label for="speech-direction">How to say it</label><textarea id="speech-direction" rows="3" maxlength="600" placeholder="e.g. Gently, with an unhurried pace and a small smile."></textarea><button id="speech-suggest" class="ghost" type="button">Suggest delivery</button><p id="speech-direction-note">Speak into Text to suggest a delivery from your recording. You can edit it before speaking.</p></details>
+        <div class="speech-actions"><button id="speech-speak" class="primary" type="submit">Speak</button><button id="speech-stop" class="ghost danger" type="button" hidden>Stop</button><button id="speech-replay" class="ghost" type="button" disabled>Replay</button><button id="speech-save" class="ghost" type="button" disabled>Save audio</button></div>
+      </form>
+      <p id="speech-status" class="speech-status" role="status" aria-live="polite">Enter the words you want to hear.</p><p id="speech-take" class="speech-take"></p>
+    </section>
+
+<section id="conversation-controls" class="conversation-controls"><label>Participants<select id="conversation-partner"><option value="vivi" selected>Momotamu + Vivi</option><option value="momotamu">Momotamu solo</option></select></label></section>
+    <section class="console">
+      <label id="src-label" class="src-label" for="src-input">Your message</label>
+      <div id="prompt-seeds" class="prompt-seeds" role="group" aria-label="Prompt seeds">
+        <button type="button" class="ghost prompt-seed" data-prompt-seed="roast">Roast</button>
+        <button type="button" class="ghost prompt-seed" data-prompt-seed="duel">Academic Duel</button>
+        <button type="button" class="ghost prompt-seed" data-prompt-seed="skit">Comedy Skit</button>
+        <button type="button" class="ghost prompt-seed" data-prompt-seed="dive">Deep Dive</button>
+        <button type="button" class="ghost prompt-seed" data-prompt-seed="kanji">Kanji Story</button>
+        <button type="button" class="ghost prompt-seed" data-prompt-seed="phrase">Phrase Lab</button>
+        <button type="button" class="ghost prompt-seed" data-prompt-seed="recall">Micro Recall</button>
+        <button id="prompt-topic" class="ghost prompt-seed" type="button" hidden>Random topic</button>
+      </div>
+      <textarea id="src-input" class="src-input" rows="2" maxlength="16000" placeholder="Type a message or use hands-free full duplex..."></textarea>
+      <div id="composer-controls" class="composer-controls" role="region" aria-label="Voice and conversation controls. Scroll for more options." tabindex="-1">
+      <div class="src-row">
+        <span id="src-chip" class="src-chip"></span>
+      </div>
+
+      <div class="run-row composer-actions">
+        <button id="source-document-open" class="ghost" type="button" aria-haspopup="dialog" aria-controls="source-panel">Document</button>
+        <details id="latest-delivery" class="voice-delivery"><summary><span class="summary-icon" aria-hidden="true">♫</span> Latest Voice Direction <span class="summary-chevron" aria-hidden="true">▾</span></summary><p id="voice-direction-receipt">A delivery plan will appear after a voiced reply.</p></details>
+        <details id="conversation-options" class="conversation-options"><summary><span class="summary-icon" aria-hidden="true">⚙</span> Conversation options <span class="summary-chevron" aria-hidden="true">▾</span></summary><div class="conversation-knobs">
+          <label id="reply-rhythm-control" class="mode-label"><span>Reply rhythm</span><select id="reply-rhythm" class="mode-select"><option value="usual">Usual</option><option value="natural">Natural</option></select></label><label class="mode-label"><span>Conversation style</span><select id="mode-select" class="mode-select"></select></label>
+          <label class="turns-label"><span data-i18n="turns">turns</span><input id="turns" type="number" min="2" max="12" step="2" value="4" title="Character contributions before the discussion pauses for you"></label>
+          <label id="listener-control" class="mode-label"><span>Listener</span><select id="listener-select" class="mode-select" aria-label="Who they speak to"><option value="user">Speak with us</option><option value="partner">Speak to each other</option></select></label>
+          <label class="mode-label" for="text-pace"><span>Text pace</span><select id="text-pace" aria-label="Text reveal speed"><option value="30" selected>Readable</option><option value="55">Slow</option><option value="15">Brisk</option><option value="0">Instant</option></select></label>
+        </div></details>
+        <button id="btn-run" class="primary big">✦ <span data-i18n="run">Ask Duo</span></button>
+        <button id="btn-stop" class="ghost" hidden>■ <span>Stop response</span></button>
+      </div>
+      </div>
+      <div id="composer-submit" class="composer-submit"></div>
+
+      <div class="status-bar">
+        <span id="status" class="status"></span>
+      </div>
+    </section>
+
+    <!-- ══ CREDITS ══ -->
+    <footer class="credits">
+      <span>© 2026 Cesar Borgenkrans · Duo Voice Harness</span>
+      <span class="sep">·</span>
+      <span>Autonomous Dual-AI Conversational Voice Runtime</span>
+    </footer>
+
+    <!-- ══ PRUNED FEATURE STUBS (Safe DOM sinks for legacy controllers) ══ -->
+    <div hidden id="pruned-stubs" aria-hidden="true" style="display:none;">
+
+      <section id="reader-panel" hidden><button id="reader-import-toggle"></button><button id="reader-own-open"></button><select id="reader-book"></select><button id="reader-demo-open"></button><div id="reader-import"><input id="reader-import-title"><select id="reader-import-language"></select><textarea id="reader-import-text"></textarea><button id="reader-import-file"></button><button id="reader-import-cancel"></button><button id="reader-import-save"></button></div><div id="reader-content"><h2 id="reader-title"></h2><p id="reader-chapter"></p><select id="reader-display"></select><select id="reader-narration"></select><div id="reader-page"><div id="reader-ja-block"><span class="reader-language"></span><p id="reader-ja"></p></div><div id="reader-en-block"><span class="reader-language"></span><p id="reader-en"></p></div><div id="reader-notes"></div></div><button id="reader-prev"></button><span id="reader-position"></span><button id="reader-next"></button><button id="reader-select-page"></button><button id="reader-clear-selection"></button><span id="reader-selection-status"></span><button id="reader-read"></button><button id="reader-stop"></button><button id="reader-ask"></button><p id="reader-status"></p><details id="reader-brief-panel"><select id="reader-budget"></select><button id="reader-summarize"></button><p id="reader-brief-status"></p><p id="reader-brief-text"></p></details></div></section>
+      <section id="production-panel" hidden><button id="production-worktree-choose"></button><button id="production-reading-choose"></button><button id="production-attach"></button><button id="production-create"></button><select id="production-source"></select><input id="production-source-range"><input id="production-worktree-include" type="checkbox"><select id="production-guest"></select><form id="production-form"></form></section>
+      <details id="document-card" hidden><span id="document-name"></span><small id="document-cost"></small><p id="document-token-detail"></p><input id="document-range"><p id="document-scope-help"></p><p id="document-warning"></p><p id="document-read-status"></p><button id="document-inspect"></button><button id="document-recount"></button><button id="document-remove"></button></details>
+      <dialog id="document-panel" hidden><h2 id="document-view-name"></h2><button id="document-close"></button><input id="document-unit"><pre id="document-preview-text"></pre><button id="document-original"></button><button id="document-use"></button></dialog>
+      <dialog id="image-panel" hidden><button id="image-close"></button><button id="image-expand"></button><select id="image-selection"></select><p id="image-name"></p><span id="image-sharing-badge"></span><p id="image-sharing-note"></p><p id="image-status"></p><p id="image-empty"></p><div id="image-viewport"><img id="image-display"><svg id="image-focus-overlay"></svg></div><div id="image-focus-labels"></div><p id="image-focus-status"></p><button id="image-attach"></button><button id="image-use-next"></button><button id="image-remove"></button><button id="image-fit"></button><button id="image-zoom-out"></button><span id="image-zoom-label"></span><button id="image-zoom-in"></button><input id="image-focus-enabled" type="checkbox"><select id="image-variant"></select><select id="image-focus-turn"></select><p id="image-dimensions"></p><p id="image-transform"></p><span id="image-capability"></span><button id="image-model"></button></dialog>
+      <dialog id="backstage-panel" hidden><button id="backstage-close"></button><nav id="backstage-owners"></nav><p id="backstage-empty"></p><div id="backstage-note-view"><select id="backstage-entry"></select><span id="backstage-visibility"></span><span id="backstage-note-time"></span><textarea id="backstage-text"></textarea><p id="backstage-selection"></p><button id="backstage-reveal"></button><button id="backstage-file"></button></div><p id="backstage-status"></p><button id="backstage-configure"></button><button id="backstage-resume"></button><button id="backstage-stop"></button></dialog>
+      <dialog id="agent-panel" hidden><button id="agent-close"></button><input id="agent-enabled" type="checkbox"><p id="agent-status"></p><button id="agent-copy"></button><button id="agent-stop"></button><pre id="agent-connection"></pre><div id="agent-history"></div></dialog>
+      <details id="listen-panel" hidden><span id="listen-summary-state"></span><select id="listen-mode"></select><select id="listen-duration"></select><p id="listen-route-hint"></p><span id="listen-source-summary"></span><button data-audio-input-open></button><p id="listen-capability"></p><span id="listen-state"></span><span id="listen-clock"></span><meter id="listen-level"></meter><span id="listen-remaining"></span ><button id="listen-start"></button><button id="listen-respond"></button><button id="listen-pause"></button><button id="listen-cancel"></button><div id="listen-status"></div><p id="listen-health"></p><p id="listen-recent-status"></p><textarea id="listen-transcript"></textarea><span id="listen-recent-count"></span><button id="listen-forget"></button><div id="listen-recent-entries"></div><pre id="listen-brief"></pre><p id="listen-budget"></p><select id="listen-handoff"></select><input id="listen-task"><select id="listen-window"></select><input id="listen-names"></details>
+      <aside id="live-flow" class="live-flow" hidden><div class="lf-shell"><section id="live-flow-glossary" class="lf-glossary" hidden><h2 id="live-flow-glossary-title"></h2><button id="live-flow-glossary-close"></button></section><div class="lf-rail"><button id="live-flow-close"></button><div id="live-flow-route"></div><details id="live-flow-details"><summary></summary></details><button id="live-flow-glossary-open"></button></div></div></aside>
+      <input id="listen-mic" type="checkbox" checked><input id="listen-meeting" type="checkbox">
+      <button id="btn-load" hidden></button><button id="image-view-toggle" hidden></button><button id="production-look-preview-toggle" hidden></button><button id="agent-toggle" hidden></button><button id="settings-runtime-glossary" hidden></button>
+    </div>
+
+  </div>
+
+  <!-- ══ CLIENT RUNTIME SCRIPTS ══ -->
+  <dialog id="persona-language-panel" aria-labelledby="persona-language-title" aria-describedby="persona-language-help">
+    <header><h2 id="persona-language-title">Choose speech language</h2><button id="persona-language-close" class="ghost" type="button" aria-label="Close language picker">×</button></header>
+    <p id="persona-language-help">One Persona setting for conversation replies, voice previews and Speech scripts. Write or request text in the language you want to hear. Support depends on the selected voice model.</p>
+    <label for="persona-language-search">Find a language</label><input id="persona-language-search" type="search" placeholder="Search languages or language codes" autocomplete="off">
+    <p id="persona-language-count" role="status"></p><div id="persona-language-list" role="group" aria-label="Speech languages"></div>
+    <footer id="persona-language-current">Changes save when you choose a language.</footer>
+  </dialog>
+  <script src="src/interface/status-feedback.js"></script>
+  <script src="src/interface/runtime-errors.js"></script>
+  <script src="src/app/i18n.js"></script>
+  <script src="src/interface/composer-layout.js"></script>
+  <script src="src/app/window-view.js"></script>
+  <script src="src/motion/sprite-actions.js"></script>
+  <script src="src/motion/momotamu-motion-data.js"></script>
+  <script src="src/motion/momotamu-speech-player.js"></script>
+  <script src="src/motion/sprite-audio-motion.js"></script>
+  <script src="src/motion/momotamu-feature-motion.js"></script>
+  <script src="src/motion/vivi-brass-light.js"></script>
+  <script src="src/motion/sprite-smooth-motion.js"></script>
+  <script src="src/motion/sprite-runtime.js"></script>
+  <script src="src/voice/voice-player.js"></script>
+  <script src="src/documents/document-gate.js"></script>
+  <script src="src/documents/source-controller.js"></script>
+  <script src="src/conversation/persona-abstentions.js"></script>
+  <script src="src/models/model-readiness.js"></script>
+  <script src="src/models/model-config.js"></script>
+  <script src="src/models/gpu-poll.js"></script>
+  <script src="src/models/model-controller.js"></script>
+  <script src="src/models/local-engines-controller.js"></script>
+  <script src="src/conversation/turn-coordinator.js"></script>
+  <script src="src/conversation/reply-prefetch.js"></script>
+  <script src="src/conversation/turn-delivery.js"></script>
+  <script src="src/conversation/conversation-model.js"></script>
+  <script src="src/conversation/backstage-model.js"></script>
+  <script src="src/voice/reply-delivery.js"></script>
+  <script src="src/voice/voice-language.js"></script>
+  <script src="src/voice/persona-language-controller.js"></script>
+  <script src="src/conversation/session-controller.js"></script>
+  <script src="src/listening/listening-capture.js"></script>
+  <script src="src/input/audio-input-controller.js"></script>
+  <script src="src/voice/voice-output-controller.js"></script>
+  <script src="src/conversation/character-recipe.js"></script>
+  <script src="src/conversation/topic-bank.js"></script>
+  <script src="src/conversation/prompt-seeds.js"></script>
+  <script src="src/interface/panel-owner.js"></script>
+  <script src="src/interface/conversation-header.js"></script>
+  <script src="src/speech/speech-controller.js"></script>
+  <script src="src/interface/chat-audio-controller.js"></script>
+  <script src="src/input/input-controller.js"></script>
+  <script src="src/input/hands-free-gate.js"></script>
+  <script src="src/input/hands-free-controller.js"></script>
+  <script src="src/worktrees/worktree-controller.js"></script>
+  <script src="src/presence/presence-model.js"></script>
+  <script src="src/presence/presence-painter.js"></script>
+  <script src="src/presence/presence-signals.js"></script>
+  <script src="src/presence/stage-fanout.js"></script>
+  <script src="src/presence/momotamu-form-rule.js"></script>
+  <script src="src/voice/voice-policy.js"></script>
+  <script src="src/presence/presence-controller.js"></script>
+
+  <script src="src/interface/holodeck-backdrop.js"></script>
+  <script src="src/security/credential-settings.js"></script>
+  <script src="src/voice/voice-settings-controller.js"></script>
+  <script src="src/app/renderer.js"></script>
+</body>
+</html>

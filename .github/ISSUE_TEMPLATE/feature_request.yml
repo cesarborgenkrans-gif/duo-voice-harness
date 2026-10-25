@@ -1,0 +1,23 @@
+name: Improvement idea
+description: Suggest a focused change to the experience or developer workflow.
+title: "[Idea] "
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: What would you like to do?
+      description: Describe the user need or task and what gets in the way today.
+    validations:
+      required: true
+  - type: textarea
+    id: experience
+    attributes:
+      label: What experience would help?
+      description: A short example is welcome. Mention small-screen, accessibility or local/remote constraints if relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: contribution
+    attributes:
+      label: Examples or a contribution approach
+      description: Optional ideas, references, shareable examples or ways you would like to help. Distinguish a proposed integration from one you have tested.

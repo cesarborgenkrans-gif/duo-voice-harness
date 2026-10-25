@@ -1,0 +1,107 @@
+/* Momotamu presence and the conversation cast layouts.
+   Both forms (View → Show Momotamu as) share one placement in Conversation and Discussions:
+   solo chats put Momotamu beside the composer, a chosen guest opens the Stage band under the top bar.
+   Character shows her sprite there, Presence shows the disc. Switching forms never moves the conversation. */
+.momotamu-form-choice fieldset{border:0;margin:0;padding:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px}
+.momotamu-form-choice legend{padding:0;margin:0 0 6px;font:inherit;color:var(--text)}
+.momotamu-form-choice label{display:inline-flex;align-items:center;gap:7px}
+.momotamu-form-choice input{accent-color:var(--gold)}
+.momotamu-idle-choice{display:flex;align-items:center;gap:10px;margin-top:8px}
+.momotamu-idle-choice[hidden]{display:none}
+.momotamu-idle-choice select{font:inherit;color:var(--text);background:rgba(0,0,0,.28);border:1px solid var(--border);border-radius:8px;padding:5px 9px}
+.momotamu-idle-choice select option{background:#1c1622;color:var(--text)}
+body[data-theme="light"] .momotamu-idle-choice select{background:rgba(255,255,255,.7)}
+body[data-theme="light"] .momotamu-idle-choice select option{background:#fff}
+
+/* One small fixed disc everywhere (solo slot, Stage, narrow widths, Recording): always smaller than the character sprites
+   (about 97-116 px on the Stage, 173 px in the solo slot). No breakpoint or layout changes its size. */
+:root{--presence-disc:60px}
+.presence-disc{--presence-size:var(--presence-disc);display:flex;flex-direction:column;align-items:center;gap:4px;width:var(--presence-size);flex:none}
+.presence-disc[hidden]{display:none!important}
+/* Porcelain plate behind the glass, as the Collaboration map rail uses on the plum theme. */
+.presence-plate{width:var(--presence-size);height:var(--presence-size);border-radius:50%;
+  background:radial-gradient(circle at 50% 42%,#fbfcfa 0,#f4f6f3 58%,#e9ece6 100%);
+  box-shadow:0 0 0 1px rgba(232,180,90,.26),0 8px 22px rgba(9,5,12,.32)}
+body[data-theme="light"] .presence-plate{box-shadow:0 0 0 1px rgba(40,83,91,.14),0 6px 16px rgba(38,75,79,.10)}
+.presence-canvas{display:block;width:100%;height:100%;border-radius:50%}
+.presence-meter{position:relative;width:var(--presence-size);height:2px;border-radius:1px;background:rgba(239,228,207,.16);overflow:hidden}
+body[data-theme="light"] .presence-meter{background:rgba(24,61,67,.12)}
+.presence-meter>span{position:absolute;inset:0 auto 0 0;width:0;background:#72b9ca;border-radius:1px}
+.presence-meter.gated{opacity:.4}
+.presence-state{min-height:1.3em;font:italic 11px/1.3 Georgia,'Noto Serif JP',serif;color:var(--muted);text-align:center;white-space:nowrap}
+.presence-disc[data-state=listening] .presence-state{color:var(--momotamu)}
+.presence-disc[data-state=checking] .presence-state,.presence-disc[data-state=invited] .presence-state{color:var(--gold)}
+.presence-disc[data-state=thinking] .presence-state{color:var(--purple)}
+.presence-disc[data-state=speaking] .presence-state{color:#f0d79a}
+body[data-theme="light"] .presence-disc[data-state=speaking] .presence-state{color:#7d6435}
+.presence-disc.presence-fallback .presence-canvas{visibility:hidden}
+
+/* Shared: transcript on top, composer at the bottom. The workbench box dissolves so its
+   two parts can sit on either side of the transcript; the stage band opens above it. */
+.app[data-cast-layout]:not([data-cast-layout=recording]){overflow-y:auto}
+.app[data-cast-layout]:not([data-cast-layout=recording]) #conversation-workbench{display:contents}
+.app[data-cast-layout]:not([data-cast-layout=recording]) .logwrap{order:2;flex:1 1 auto;min-height:220px}
+.app[data-cast-layout]:not([data-cast-layout=recording]) #workbench-composer{order:3;flex:none}
+.app[data-cast-layout]:not([data-cast-layout=recording])>.credits{order:4}
+/* Presence: the light itself shows who is speaking; the sprite dim/brighten filter stays for guests only. */
+.app[data-momotamu-form=presence][data-cast-layout] #momotamu-stage .momotamu-name{display:none}
+.app[data-momotamu-form=presence][data-cast-layout] #momotamu-stage{filter:none}
+
+/* Solo: one slot at the composer's left edge, the same size for the sprite and the disc. */
+.app[data-cast-layout=pulse] #conversation-workbench>.stage{display:none!important}
+.app[data-cast-layout=pulse] .console{position:relative;padding-left:calc(var(--pulse-size,112px) + 30px);min-height:calc(var(--pulse-size,112px) * 2 + 32px)}
+.cast-slot{position:absolute;left:14px;top:14px;width:var(--pulse-size,112px);display:flex;flex-direction:column;align-items:center}
+.cast-slot[hidden]{display:none!important}
+/* Presence form: the slot shrinks to the disc and centres it vertically beside the composer. The composer box keeps its
+   left edge; only its text column moves closer (about 52 px at full width) when switching from Character. */
+.app[data-momotamu-form=presence][data-cast-layout=pulse] .console{padding-left:calc(var(--presence-disc) + 30px);min-height:calc(var(--presence-disc) + 64px)}
+.app[data-momotamu-form=presence][data-cast-layout=pulse] .cast-slot{width:var(--presence-disc);top:50%;transform:translateY(-50%)}
+.app .cast-slot>#momotamu-stage{flex:none;width:100%;margin:0;gap:4px;align-items:center}
+/* The sprite canvas is wider than the slot; its transparent sides overlap the gap, so the figure fills the slot width. */
+.app .cast-slot #momotamu-sprite{width:calc(var(--pulse-size,112px) * 1.5);height:calc(var(--pulse-size,112px) * 2);margin:0 calc(var(--pulse-size,112px) * -.25);min-height:0;max-height:none;flex:none}
+.cast-slot .bubble{display:none!important}
+.cast-slot .momotamu-name{font:700 var(--type-meta)/1.4 var(--ui);letter-spacing:0;white-space:nowrap;text-align:center}
+/* When the companion stage is shown in another window, Momotamu is not repeated here. */
+.app:has(.stage.companion-away) .cast-slot{visibility:hidden}
+
+/* Stage band: one visual per participant, side by side; pushes the chat down. */
+.app[data-cast-layout=stage] #conversation-workbench>.stage{order:1;position:static;align-self:stretch;width:auto;flex:none;height:auto;min-height:0;display:flex;flex-direction:row;
+  justify-content:center;align-items:flex-end;gap:clamp(6px,2.4vw,36px);padding:12px clamp(8px,1.6vw,18px) 8px;
+  border:1px solid var(--border);border-radius:var(--radius);background:linear-gradient(135deg,rgba(232,180,90,.035),transparent 46%),var(--surface);box-shadow:var(--room-shadow);
+  --momotamu-fixed-height:var(--stage-guest-height,150px)}
+.app[data-cast-layout=stage] #conversation-workbench>.stage .mascot{flex:0 1 auto;width:auto;min-width:0;justify-content:flex-end}
+/* Presence on the Stage: the disc floats beside the guest at the guest's chest height (about 64% of the sprite canvas
+   above its bottom edge), not on the floor. 35px = disc centre above the column bottom (30 + meter + word) less the name row. */
+.app[data-momotamu-form=presence][data-cast-layout=stage] #conversation-workbench>.stage #momotamu-stage{flex:none;width:auto;justify-content:flex-end;
+  padding-bottom:max(0px,calc(var(--momotamu-fixed-height) * var(--character-scale,1) * .64 - 35px))}
+.app[data-cast-layout=stage] #conversation-workbench>.stage .actor-state{display:block;min-height:1.35em}
+/* Floor shadow: a soft contact ellipse under Momotamu's planted soles (sole y465 of the 512 px canvas, about 91%).
+   The shadow sits in the canvas background, so it never moves with the sway mesh. */
+.app[data-cast-layout=stage] #conversation-workbench>.stage #momotamu-sprite{
+  background:radial-gradient(closest-side,rgba(0,0,0,.36),rgba(0,0,0,.14) 58%,transparent) 50% 93%/44% 5.5% no-repeat}
+body[data-theme="light"] .app[data-cast-layout=stage] #conversation-workbench>.stage #momotamu-sprite{
+  background-image:radial-gradient(closest-side,rgba(34,58,64,.26),rgba(34,58,64,.09) 58%,transparent)}
+
+/* Recording view: the stage (and the same small disc) travels to the recording cast. Alone, the disc sits in the middle of
+   the cast area; with a guest it floats at the guest's chest height, as on the Stage. */
+.app[data-momotamu-form=presence][data-cast-layout=recording] #recording-cast .stage[data-subagent=inactive] #momotamu-stage{justify-content:center}
+.app[data-momotamu-form=presence][data-cast-layout=recording] #recording-cast .stage[data-subagent=active] #momotamu-stage{flex:none;width:auto;justify-content:flex-end;padding-bottom:calc(min(45vh,58vw) * var(--character-scale,1) * .64 - 30px)}
+.app[data-cast-layout=recording] #recording-cast .presence-meter,.app[data-cast-layout=recording] #recording-cast .presence-state{display:none}
+.app[data-momotamu-form=presence][data-cast-layout=recording] #recording-cast #momotamu-stage{justify-content:center}
+
+/* Width steps for the Character form's solo sprite slot and the Stage sprites only; the presence disc never changes size.
+   Stage sprite canvases stay at or above 126 px, so the drawn figure is never under about 96 px. */
+@media(max-width:1099px){.app{--pulse-size:96px;--stage-guest-height:140px}}
+@media(max-width:899px){.app{--pulse-size:72px;--stage-guest-height:132px}}
+@media(max-width:620px){.app{--pulse-size:56px;--stage-guest-height:126px}
+  .app[data-cast-layout=pulse] .console{padding-left:calc(var(--pulse-size) + 22px)}
+  .app[data-momotamu-form=presence][data-cast-layout=pulse] .console{padding-left:calc(var(--presence-disc) + 22px)}
+  .app[data-cast-layout=pulse] .cast-slot{left:10px}}
+@media(max-height:700px){.app{--stage-guest-height:128px}}
+
+/* Columns beside the rails keep their offsets while the workbench box is dissolved. */
+@media(min-width:1280px){
+ body[data-window-mode=free]:not(.recording-mode) .app.has-live-flow[data-activity=chat][data-cast-layout]>#conversation-workbench>:is(.stage,#workbench-composer){margin-left:304px}
+ body[data-window-mode=free]:not(.recording-mode) .app.has-live-flow.has-live-glossary[data-activity=chat][data-cast-layout]>#conversation-workbench>:is(.stage,#workbench-composer){margin-left:620px}
+ body[data-window-mode=free]:not(.recording-mode) .app.has-image-dock.has-live-flow.has-live-glossary[data-activity=chat][data-cast-layout]>#conversation-workbench>:is(.stage,#workbench-composer){margin-left:304px}
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "selectionPolicy": "One approved reference per actor, independent of output language.",
+  "profiles": {
+    "momotamu.selected": {
+      "file": "momotamu/momotamu-reference-original-jp.wav",
+      "actor": "momotamu",
+      "label": "Momotamu selected reference",
+      "recordingLanguage": "jp",
+      "outputLanguages": "any"
+    },
+    "vivi.selected": {
+      "file": "vivi/vivi-reference-original-jp-b11dbd4a.wav",
+      "actor": "vivi",
+      "label": "Vivi selected reference",
+      "recordingLanguage": "jp",
+      "outputLanguages": "any"
+    }
+  }
+}

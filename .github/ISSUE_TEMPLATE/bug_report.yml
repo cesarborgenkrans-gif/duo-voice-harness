@@ -1,0 +1,44 @@
+name: Bug report
+description: Help us reproduce something that does not work as expected.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: "Thanks for helping improve Duo. Use synthetic or redacted examples, and check screenshots/logs for private conversations or keys before attaching them."
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How can we reproduce it?
+      description: Include the activity, steps and a small shareable example if relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: setup
+    attributes:
+      label: Your setup
+      description: Windows version, Node version, source commit/version, window size or display mode, model/runtime and relevant audio devices. Omit private paths.
+    validations:
+      required: true
+  - type: dropdown
+    id: voice
+    attributes:
+      label: Voice route, if relevant
+      options:
+        - Not relevant / unsure
+        - Text only
+        - Local VoiceGen / VoxCPM2
+        - DIY server
+        - ElevenLabs
+        - Cartesia
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Checks, screenshots or redacted logs
+      description: Say which checks were fixtures, real-engine runs or human observations. For a regression, include the last version that worked if known.

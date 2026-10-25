@@ -1,0 +1,425 @@
+{
+  "schemaVersion": 1,
+  "scope": "Existing nonignored media in the current working source, including untracked candidates. Hashes identify bytes, not ownership.",
+  "rightsGuide": "ASSET-PROVENANCE.md",
+  "ownerStatements": {
+    "owner-20261024": {
+      "date": "2026-10-24",
+      "statement": "Created by me / generated for SparkleSnap; I’ll add tool details",
+      "scope": "The identified current bundled character images, stage textures, branding and selected reference WAVs. Tool/input details remain to be supplied. The creation statement and the separate texture reuse decision are recorded independently.",
+      "stageTextureReuse": "Use the same terms as the character artwork",
+      "publicHistoryChoice": "New public initial commit; keep the old history private locally",
+      "recordedFrom": "Owner response during release preparation"
+    }
+  },
+  "groups": {
+    "character-art": {
+      "declaredTerms": "../CHARACTER-GUIDELINES.md",
+      "evidence": "Owner-confirmed entries link to the dated statement for these exact bytes. Creation-tool details remain pending."
+    },
+    "presence-art": {
+      "declaredTerms": "../CHARACTER-GUIDELINES.md",
+      "evidence": "The owner selected the existing character-art terms for the two inventoried stage textures on 2026-10-24. New assets require their own provenance review."
+    },
+    "brand": {
+      "declaredTerms": "../CHARACTER-GUIDELINES.md#the-sparklesnap-brand",
+      "evidence": "Owner-confirmed entries link to the dated creation statement; generation-tool details remain pending."
+    },
+    "voice-reference": {
+      "declaredTerms": "../CHARACTER-GUIDELINES.md",
+      "evidence": "Owner-confirmed creation statement plus original voice-design logs. Exact tools/model revisions and detailed inputs remain to be recorded; original metadata is preserved."
+    },
+    "interface-vector": {
+      "declaredTerms": "../LICENSE",
+      "evidence": "Simple editable polygon cursor source distributed with the MIT application code."
+    },
+    "readme-media": {
+      "declaredTerms": "../CHARACTER-GUIDELINES.md",
+      "evidence": "README banner composed from the existing stage preview, and the 28-second intro film supplied by the owner. Creation details for the film remain with that source."
+    }
+  },
+  "assets": [
+    {
+      "path": "assets/brand/duo-voice-logotype.png",
+      "category": "brand",
+      "bytes": 1189241,
+      "sha256": "356bec484dabf5b6073f9c9cb2c40e71d7a0357bf8672595f13479a7e3c579d7",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1024,
+        "height": 1024
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "assets/cursor-side.svg",
+      "category": "interface-vector",
+      "bytes": 230,
+      "sha256": "8cac5af6160f0f7b76af9bda22a02c448156915fcec8e753042ebf13d0dfb4cd",
+      "publicationStatus": "code-license-declared"
+    },
+    {
+      "path": "assets/cursor.svg",
+      "category": "interface-vector",
+      "bytes": 233,
+      "sha256": "96086b6578fba2785ae505619038ff8fb16ef83617fdd5b90df9b407bac118ee",
+      "publicationStatus": "code-license-declared"
+    },
+    {
+      "path": "assets/icon-256.png",
+      "category": "brand",
+      "bytes": 91787,
+      "sha256": "9f4f36fddbf5e23264d81ef6bf1571657b5bc45be19185592cca8067916665a2",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 256,
+        "height": 256
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "assets/icon.ico",
+      "category": "brand",
+      "bytes": 141448,
+      "sha256": "30898bb175904280597ae41c9ac8800e9aa7c81efb0dc395d065b4cef2a61f87",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "assets/sparklesnap-google-logo-v1.jpg",
+      "category": "brand",
+      "bytes": 473472,
+      "sha256": "ad94cfd53941123b9eba70cce6c8aa42458157c8852ff0c582539de0901871b3",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "assets/voice/momotamu/momotamu-reference-original-jp.wav",
+      "category": "voice-reference",
+      "bytes": 860204,
+      "sha256": "cf53c768584c1bcd7094d6560923025dbbe664098f544abfc9b8ecbaef97ca25",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "audio": {
+        "format": 1,
+        "channels": 1,
+        "sampleRate": 48000,
+        "byteRate": 96000,
+        "bitsPerSample": 16,
+        "dataBytes": 860160,
+        "durationSeconds": 8.96
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "assets/voice/vivi/vivi-reference-original-jp-b11dbd4a.wav",
+      "category": "voice-reference",
+      "bytes": 844844,
+      "sha256": "ad88c144774bc8db5ebfa79944591399625b165e52086df4cf2d3b48f3ceefa7",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "audio": {
+        "format": 1,
+        "channels": 1,
+        "sampleRate": 48000,
+        "byteRate": 96000,
+        "bitsPerSample": 16,
+        "dataBytes": 844800,
+        "durationSeconds": 8.8
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/momotamu-presence/assets/gen/frosted-glass-disc-v5-1024.webp",
+      "category": "presence-art",
+      "bytes": 275112,
+      "sha256": "8a8c1d107dfbee2401fdb10c4a2cfdaa1592a53bb20c47d1345d452bc294ae97",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/momotamu-presence/assets/gen/kiln-light-1024.webp",
+      "category": "presence-art",
+      "bytes": 196526,
+      "sha256": "23225c9ce25c816b8580d4498941c94d8b5bae7cb31770e86401f870898ac384",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/momotamu/active/convo-3q-right-clarification-momotamu-4x2-1448x1086.png",
+      "category": "character-art",
+      "bytes": 476771,
+      "sha256": "beabb21eefc1bed490e90586c1e836e8c17c44b05dc97cce7c4d1ecc3a37116b",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1448,
+        "height": 1086
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/momotamu/active/convo-3q-right-image-inspection-momotamu-4x2-1448x1086.png",
+      "category": "character-art",
+      "bytes": 472087,
+      "sha256": "0d28fff80529a56be86c07a9610b89dad6eb2bad19b69ee3e8d2f324e981c155",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1448,
+        "height": 1086
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/momotamu/active/convo-3q-right-listening-momotamu-4x2-1448x1086.png",
+      "category": "character-art",
+      "bytes": 475990,
+      "sha256": "5b1c0d66e86928750733f5f521c117173c68833bc149e1b57c8b97eba0cc80e0",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1448,
+        "height": 1086
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/momotamu/active/convo-3q-right-reading-momotamu-4x2-1448x1086.png",
+      "category": "character-art",
+      "bytes": 474383,
+      "sha256": "93810ae1bfaec374870bcf8547dab1e35302bbadd0598fc178193d0dc6c58700",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1448,
+        "height": 1086
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/momotamu/active/convo-3q-right-reflection-speaking-momotamu-4x2-1448x1086.png",
+      "category": "character-art",
+      "bytes": 478734,
+      "sha256": "5b33856ba8ba0903dce5ece7ecef05c6481089858f18fe15355e891d3cf3a25f",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1448,
+        "height": 1086
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/momotamu/active/viewer-attending-clarification-momotamu-4x2-1448x1086.png",
+      "category": "character-art",
+      "bytes": 578390,
+      "sha256": "3ff96898a27e93087f4e2bb8fed396b1e81b3bb2452e1272989ca7292664e2ea",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1448,
+        "height": 1086
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/momotamu/active/viewer-attending-expressive-gestures-momotamu-4x2-1448x1086.png",
+      "category": "character-art",
+      "bytes": 751442,
+      "sha256": "c531324f62295ee339dc3326d17f1db60bf34d44475272572559c49610627dcc",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1448,
+        "height": 1086
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/momotamu/active/viewer-attending-image-inspection-momotamu-4x2-1448x1086.png",
+      "category": "character-art",
+      "bytes": 403921,
+      "sha256": "f3b1eca8c75a7ea7f9abb1b50245e8b5e35a09bfa749fe1ede46796ece77c193",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1448,
+        "height": 1086
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/momotamu/active/viewer-attending-listening-momotamu-4x2-1448x1086.png",
+      "category": "character-art",
+      "bytes": 487314,
+      "sha256": "8a24f122be1d74c689b8119fe6ceb3bb02d172135d3f1b6fe6c148e72699d403",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1448,
+        "height": 1086
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/momotamu/active/viewer-attending-open-attention-momotamu-4x2-1448x1086.png",
+      "category": "character-art",
+      "bytes": 778262,
+      "sha256": "73c0a12352a88079c1c5f9dd83ad370ad1b7fe2aad6d29ec7ca6a6935c572cf5",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1448,
+        "height": 1086
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/momotamu/active/viewer-attending-playful-reactions-momotamu-4x2-1448x1086.png",
+      "category": "character-art",
+      "bytes": 770966,
+      "sha256": "7cc70c0c0892112b8f7383c165df36f7f5b7dcb422f0ddfa763f2f9c56ae14ed",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1448,
+        "height": 1086
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/momotamu/active/viewer-attending-reading-momotamu-4x2-1448x1086.png",
+      "category": "character-art",
+      "bytes": 408048,
+      "sha256": "80cecde474f34f4a03efeadd4d772adb8008d19c550dc503989a211cfa5fd534",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1448,
+        "height": 1086
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/momotamu/active/viewer-attending-reflection-momotamu-4x2-1448x1086.png",
+      "category": "character-art",
+      "bytes": 582012,
+      "sha256": "6346ffbcefa08ce050556144581449960b7596ba86d77f11a7791fa21289baa5",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1448,
+        "height": 1086
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/momotamu/active/viewer-attending-speaking-momotamu-4x2-1448x1086.png",
+      "category": "character-art",
+      "bytes": 579845,
+      "sha256": "20edff1797a4841e35af6ea57d0cee0380e709c19521073f6001280111b34c1c",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1448,
+        "height": 1086
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/momotamu/active/viewer-attending-speaking-variations-momotamu-4x2-1448x1086.png",
+      "category": "character-art",
+      "bytes": 734733,
+      "sha256": "f689915b2dcb5e20689dcf45d731862750c51de78d024fba714bdb7ec93f2873",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1448,
+        "height": 1086
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/momotamu/active/viewer-attending-subtle-expressions-momotamu-4x2-1448x1086.png",
+      "category": "character-art",
+      "bytes": 762013,
+      "sha256": "71838e8e3e874e1ec47d546b82e95a5479b6ee845eb1a6d1c9cc0758b5c99e84",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1448,
+        "height": 1086
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/momotamu/active/viewer-facing-playful-reactions-momotamu-4x2-1448x1086.png",
+      "category": "character-art",
+      "bytes": 836698,
+      "sha256": "1a769018188508509de1d50223685f0e945a95a166357a97340b0a274683fd2b",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1448,
+        "height": 1086
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/vivi/active/vivi-convo-3q-right-reflection-clarification-4x2-1448x1086.png",
+      "category": "character-art",
+      "bytes": 731112,
+      "sha256": "ceb4a2a61d8a940f8c4c5d6d6a5abd381203264c09a6c438bb39c158a51c8378",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1448,
+        "height": 1086
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/vivi/active/vivi-viewer-attending-comprehension-4x2-1448x1086.png",
+      "category": "character-art",
+      "bytes": 736226,
+      "sha256": "ffe9c122a0d0126b664836d2439887f7c5c32a1468a36e2443dfcd7955f499df",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1448,
+        "height": 1086
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/vivi/active/vivi-viewer-attending-listening-4x2-1448x1086.png",
+      "category": "character-art",
+      "bytes": 739784,
+      "sha256": "a13b4e2894e5486bb105edf2c3cfc2b277de34c62a716e512339709ccf37554d",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1448,
+        "height": 1086
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/vivi/active/vivi-viewer-attending-natural-speaking-4x2-1448x1086.png",
+      "category": "character-art",
+      "bytes": 726417,
+      "sha256": "f0827c5ccdfccfaad58c12fb1872170b41378c54d23a534a0b4c1039a35a1baa",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1448,
+        "height": 1086
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "characters/vivi/active/vivi-viewer-attending-reflection-clarification-4x2-1448x1086.png",
+      "category": "character-art",
+      "bytes": 736226,
+      "sha256": "ffe9c122a0d0126b664836d2439887f7c5c32a1468a36e2443dfcd7955f499df",
+      "publicationStatus": "owner-confirmed-details-pending",
+      "image": {
+        "width": 1448,
+        "height": 1086
+      },
+      "ownerConfirmation": "owner-20261024"
+    },
+    {
+      "path": "docs/media/banner.webp",
+      "category": "readme-media",
+      "bytes": 81334,
+      "sha256": "165926990ebb317531eba4cae216e6c975e53563a92264f080a155af9446af8d",
+      "publicationStatus": "owner-confirmation-pending"
+    },
+    {
+      "path": "docs/media/duo-voice-harness-intro.mp4",
+      "category": "readme-media",
+      "bytes": 1253153,
+      "sha256": "1282293a5a4227560b4ede0284f4d0a9cfd8a1cb6a1f1fce1e1dd580c8ad0842",
+      "publicationStatus": "owner-confirmation-pending"
+    }
+  ]
+}

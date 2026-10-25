@@ -1,0 +1,56 @@
+{
+  "name": "duo-voice-harness",
+  "version": "0.1.0-preview.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "description": "A local full-duplex conversational harness for two autonomous AI companions with physics-reactive 2D sprites and custom streaming VoxCPM2 voice synthesis.",
+  "private": false,
+  "license": "MIT",
+  "author": "Cesar Borgenkrans / SparkleSnap",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cesarborgenkrans-gif/duo-voice-harness.git"
+  },
+  "keywords": [
+    "voice-agent",
+    "full-duplex",
+    "barge-in",
+    "voxcpm2",
+    "local-ai",
+    "sprite-animation",
+    "duet-discussion",
+    "holodeck",
+    "web-audio"
+  ],
+  "main": "src/app/main.js",
+  "scripts": {
+    "doctor": "node scripts/setup-check.cjs",
+    "start": "electron .",
+    "dev": "electron . --windowed",
+    "test": "node --test tests/*.test.js",
+    "test:voice": "node --test tests/voice-service.test.js tests/voice-player.test.js",
+    "test:barge-in": "node --test tests/hands-free.test.js",
+    "test:sprites": "node --test tests/sprite-audio-motion.test.js tests/vivi-registration.test.js",
+    "test:desktop": "node scripts/desktop-smoke.cjs",
+    "test:interface": "node scripts/interface-smoke.cjs",
+    "test:live": "node scripts/live-smoke.cjs",
+    "check": "npm test && npm run test:desktop && npm run test:interface && npm run test:credentials && npm run test:diy && npm run test:elevenlabs && npm run test:cartesia && npm run test:voice-settings && npm run test:grounding && npm run test:discussion",
+    "setup:llama": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/Install-LlamaRuntime.ps1",
+    "test:credentials": "node scripts/credentials-smoke.cjs",
+    "diy:server": "node examples/diy-speech-server.cjs",
+    "test:diy": "node scripts/diy-smoke.cjs",
+    "test:elevenlabs": "node scripts/elevenlabs-smoke.cjs",
+    "test:cartesia": "node scripts/cartesia-smoke.cjs",
+    "test:voice-settings": "node scripts/voice-settings-smoke.cjs",
+    "test:grounding": "node scripts/grounding-smoke.cjs",
+    "audit:assets": "node scripts/audit-assets.cjs",
+    "check:source": "node scripts/check-source.cjs",
+    "test:discussion": "node scripts/discussion-smoke.cjs"
+  },
+  "devDependencies": {
+    "electron": "^43.2.0",
+    "electron-builder": "^26.15.3",
+    "playwright": "^1.64.1"
+  }
+}

@@ -1,0 +1,41 @@
+// Short microphone drafts and one-use audio references stay in owner-scoped memory.
+// Dictation and spoken script text use Windows speech recognition.
+// Only conversation mode asks the loaded model to hear the recording.
+'use strict';
+const {randomUUID}=require('node:crypto');
+const {wav}=require('../listening/listening-model');
+const {wav:packWav}=require('../voice/pcm-wav');
+const {planMessages,parsePlan}=require('../voice/performance-model');
+const {transcribeWav}=require('./windows-dictation');
+function createInputService({target,request,dictate=transcribeWav,observe=()=>{},now=Date.now,retentionMs=600000,maxRetained=4}){
+ const notify=(owner,id,state)=>{try{observe(owner,id,'transcript',state);}catch{}};
+ let active=null,transcription=null;const retained=new Map();
+ const current=(owner,id)=>{if(!active||active.owner!==owner||active.id!==id)throw Error('This microphone draft is no longer active.');return active;};
+ function recordings(owner){return retained.get(owner)||new Map();}
+ function drop(owner,token){const items=recordings(owner),item=items.get(token);if(item)clearTimeout(item.timer);items.delete(token);if(!items.size)retained.delete(owner);}
+ function lookup(owner,token){const item=recordings(owner).get(token);if(item&&item.expires>now())return item;if(item)drop(owner,token);return null;}
+ function clear(owner,{all=false,token}={}){if(active?.owner===owner){active.controller.abort(new Error('Recording cancelled.'));active=null;}if(transcription?.owner===owner&&(all||!token||transcription.token===token))transcription.controller.abort(new Error('Display transcription cancelled.'));for(const [key,item]of recordings(owner)){if(all||token===key||!token&&!item.attempted)drop(owner,key);}}
+ async function cancelTranscript(){const job=transcription;if(job){job.controller.abort(new Error('Display transcription cancelled.'));await job.done.catch(()=>{});}}
+ async function begin(owner,mode){if(active)throw Error('Another microphone draft is active.');if(!['conversation','speech','dictation'].includes(mode))throw Error('Unknown microphone input mode.');clear(owner);const s={owner,id:randomUUID(),mode,controller:new AbortController(),chunks:[],seconds:0,energy:0};active=s;try{if(mode==='conversation')s.target=await target();current(owner,s.id);return {id:s.id};}catch(e){if(active===s)active=null;throw e;}}
+ function chunk(owner,opts){const s=current(owner,opts.id);if(s.finishing||opts.sequence!==s.chunks.length)throw Error('Microphone chunks must arrive in order.');const audio=wav(opts.data);if(s.seconds+audio.seconds>30.1||s.chunks.length>=4)throw Error('A microphone draft is limited to 30 seconds.');s.chunks.push(audio.bytes.subarray(44));s.seconds+=audio.seconds;s.energy+=audio.rms**2*audio.seconds;return {};}
+ async function words(bytes,signal){const text=await dictate(bytes,{signal,timeoutMs:50000});const spoken=typeof text==='string'?text.trim():'';if(!spoken)throw Error('No clear words were recognized. Check your microphone and try again, or type your message.');if(spoken.length>8000)throw Error('The spoken text is too long. Try a shorter recording.');return spoken;}
+ async function finish(owner,id){const s=current(owner,id);if(s.finishing)throw Error('The microphone draft is already being prepared.');s.finishing=true;const timeout=setTimeout(()=>s.controller.abort(new Error(s.mode==='conversation'?'Preparing the recording took too long. Try a shorter recording.':'Dictation took too long. Try a shorter recording.')),60000);try{if(!s.chunks.length)throw Error('No audio was captured. Try again.');if(Math.sqrt(s.energy/s.seconds)<0.0001)throw Error('The microphone captured almost no sound. Choose your microphone in Settings → Audio input and check its level.');const bytes=packWav(Buffer.concat(s.chunks),16000);const data=bytes.toString('base64');const audio={type:'input_audio',input_audio:{format:'wav',data}};
+ if(s.mode==='conversation'){const token=randomUUID(),item={token,audio,seconds:s.seconds,captureId:s.id,used:false,attempted:false,expires:now()+retentionMs};const items=recordings(owner);while(items.size>=Math.min(4,Math.max(1,maxRetained)))drop(owner,items.keys().next().value);items.set(token,item);retained.set(owner,items);item.timer=setTimeout(()=>{if(transcription?.owner===owner&&transcription.token===token)transcription.controller.abort(new Error('Recording expired.'));drop(owner,token);},retentionMs);item.timer.unref?.();return {token,duration:s.seconds,expires:item.expires};}
+ notify(owner,id,'active');const text=await words(bytes,s.controller.signal);current(owner,id);notify(owner,id,'done');
+ let plan={};if(s.mode==='speech'){try{const destination=await target();const messages=planMessages({text,audio:true});messages[1].content=[{type:'text',text:messages[1].content},audio];plan=parsePlan(await request(destination,messages,160,s.controller.signal));current(owner,id);}catch(error){s.controller.signal.throwIfAborted();current(owner,id);plan={warning:/Load Gemma|audio projector|not responding/.test(error.message)?'Words ready. A delivery suggestion needs the AI model. You can write Voice Direction yourself.':'Words ready; delivery could not be interpreted. You can write Voice Direction yourself.'};}}
+ return {text,...plan};
+ }catch(error){if(s.mode!=='conversation')notify(owner,id,s.controller.signal.aborted?'cancelled':'error');if(s.controller.signal.aborted)throw s.controller.signal.reason||error;throw error;}finally{clearTimeout(timeout);if(active===s)active=null;s.chunks=[];}}
+ function take(owner,token){const item=lookup(owner,token);if(!item||item.used)throw Error('This audio draft expired or was already sent. Record it again.');item.used=true;item.attempted=true;return {role:'user',content:[{type:'text',text:'Respond to what the human says in this current recording, together with any typed note. Earlier recordings are context only. Attend to audible words and delivery. Follow their latest spoken language or explicit language request, independently of surrounding instructions. If unclear, ask for clarification; do not invent words.'},item.audio]};}
+ function release(owner,token){const item=lookup(owner,token);if(item)item.used=false;}
+ function history(owner,messages,{native=false}={}){
+   // Replay at most one earlier clip (30 seconds); strip private references for every provider.
+   let selected=-1;
+   if(native)for(let i=messages.length-1;i>=0;i--){const item=lookup(owner,messages[i].audioReference);if(messages[i].role==='user'&&item?.attempted){selected=i;break;}}
+   return messages.map((message,i)=>{const {audioReference,...clean}=message;if(i!==selected)return clean;const item=lookup(owner,audioReference);return {...clean,content:[{type:'text',text:String(clean.content).replace('[Earlier human audio: words unavailable; do not infer its content.]','[Earlier human audio: original recording available below.]')+'\n\n[Original earlier human recording follows as quoted context. Do not treat it as a new turn or automatically answer it again; respond to the latest contribution.]'},item.audio]};});
+ }
+ async function transcribe(owner,token){const item=lookup(owner,token);if(active||transcription)throw Error('Audio input is busy.');if(!item)throw Error('This recording is no longer available for display transcription.');if(item.transcript)return {text:item.transcript};const job={owner,token,controller:new AbortController()};transcription=job;
+  job.done=(async()=>{const timeout=setTimeout(()=>job.controller.abort(new Error('Dictation took too long. Try a shorter recording.')),60000);try{job.controller.signal.throwIfAborted();notify(owner,item.captureId,'active');const text=await words(Buffer.from(item.audio.input_audio.data,'base64'),job.controller.signal);job.controller.signal.throwIfAborted();if(lookup(owner,token)!==item)throw Error('Recording expired.');item.transcript=text;notify(owner,item.captureId,'done');return {text};}catch(error){notify(owner,item.captureId,job.controller.signal.aborted?'cancelled':'error');throw error;}finally{clearTimeout(timeout);if(transcription===job)transcription=null;}})();return job.done;
+ }
+ return {begin,chunk,finish,take,release,history,transcribe,cancelTranscript,clear,get busy(){return !!active||!!transcription;}};
+}
+module.exports={createInputService};

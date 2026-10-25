@@ -1,0 +1,13 @@
+VoiceGen Oui! (ROCm-VoxCPM2)
+Copyright 2026 Cesar Borgenkrans
+
+Source code and documentation text in this repository are licensed under the
+Apache License, Version 2.0, except where a file or notice says otherwise.
+
+Brand, mascot, logo, character, screenshot, and demo media assets are not
+licensed under Apache-2.0. They are covered separately by docs/ASSET_LICENSE.md.
+
+This project is independent and is not affiliated with, sponsored by, or
+endorsed by AMD, OpenBMB, Tsinghua University, or any third-party dependency
+project. Names such as AMD, ROCm, OpenBMB, VoxCPM, and VoxCPM2 are used only to
+identify compatibility targets and upstream dependencies.

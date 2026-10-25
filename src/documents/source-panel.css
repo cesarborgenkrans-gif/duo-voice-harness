@@ -1,0 +1,22 @@
+/* Keep attachment editing inside a transient setup surface, not the cast/composer. */
+#source-panel {width:min(680px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:0;overflow:hidden;}
+#source-panel[open] {display:flex;flex-direction:column;}
+#source-panel>.model-head {flex:none;margin:0;padding:16px 20px;border-bottom:1px solid var(--border);}
+#source-panel h2 {font-size:24px;}
+#source-close {min-width:44px;min-height:44px;}
+.source-options {min-height:0;overflow:auto;overscroll-behavior:contain;padding:4px 20px 14px;scrollbar-gutter:stable;}
+#source-panel p {font:400 14px/1.5 var(--body);color:var(--text);}
+#source-panel label {font:600 14px/1.5 var(--body);margin:12px 0;}
+#source-panel textarea {width:100%;box-sizing:border-box;min-height:130px;max-height:35vh;resize:vertical;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:10px;font:400 15px/1.5 var(--body);}
+#source-panel textarea::placeholder {color:var(--text);opacity:.8;}
+.source-footer {flex:none;padding:10px 20px;border-top:1px solid var(--border-hot);display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--bg);}
+#source-panel .source-footer p {font-size:13px;min-width:0;margin:0;}
+.source-footer .row-actions {display:flex;gap:8px;flex:none;}
+#source-panel :is(button,select,input) {min-height:44px;}
+#source-panel :focus-visible {outline:2px solid var(--gold);outline-offset:3px;}
+body[data-window-mode=panel] #source-panel :is(button,input,select,label,textarea,p) {font-size:18px;}
+body[data-window-mode=panel] #source-panel :is(button,input,select) {min-height:54px;}
+@media(max-width:540px) {.source-footer {flex-wrap:wrap;}.source-footer .row-actions {margin-left:auto;}}
+
+.source-reply-note {font:600 14px/1.5 var(--body);color:var(--gold);margin:8px 0 0;}
+body[data-window-mode=panel] .source-reply-note {font-size:18px;}

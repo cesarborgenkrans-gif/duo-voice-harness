@@ -1,0 +1,21 @@
+Duo Voice Harness — license boundaries
+
+The root MIT LICENSE applies to original application code and documentation,
+except for the separately identified components and media below. It does not
+relicense third-party work or grant rights in bundled characters or branding.
+
+The adapted VoiceGen backend under runtime/voicegen-oui/ retains Apache-2.0.
+Its LICENSE, NOTICE and ORIGIN.md are distributed together. The copied and
+modified PCM worklet at src/voice/voice-pcm-worklet.js also retains Apache-2.0;
+see runtime/voicegen-oui/LICENSE and NOTICE for that component's license/notice.
+
+Character artwork and reference recordings have the separate terms described
+in CHARACTER-GUIDELINES.md. Brand marks are for attribution under that guide.
+The asset inventory, source evidence, and licensing boundaries are
+recorded in docs/ASSET-PROVENANCE.md. Inclusion in an inventory establishes
+file integrity and origin rather than granting general redistribution rights.
+
+Model weights, downloaded runtimes and dependencies retain their respective
+upstream licenses. They are not relicensed by this notice or the character
+guidelines. Package-level license metadata describes the application code;
+it is not a blanket license for every file in the checkout.

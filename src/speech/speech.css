@@ -1,0 +1,16 @@
+.speech-panel{flex:1 0 auto;padding:18px;background:var(--surface);border:1px solid var(--border);border-radius:12px;color:var(--text)}
+.speech-panel h2{font:600 var(--type-section)/1.2 var(--serif);color:var(--gold);margin:0 0 5px}
+.speech-panel header p{color:var(--muted);margin:0 0 18px}
+.speech-panel label{display:block;font:600 var(--type-control)/1.4 var(--ui);margin-bottom:6px}
+.speech-panel textarea{width:100%;min-height:160px;resize:vertical;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:12px;font:400 var(--type-body)/1.55 var(--ui)}
+.speech-panel textarea::placeholder{color:var(--muted);opacity:1}
+.speech-options{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}.speech-options label{flex:1 1 140px}
+.speech-options select{display:block;width:100%;margin-top:6px;padding:9px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px}
+.speech-count{text-align:right;font:400 var(--type-meta)/1.4 var(--ui);color:var(--muted);margin:4px 0}
+.speech-actions{display:flex;gap:8px;flex-wrap:wrap}.speech-actions button{min-height:38px}
+.speech-status{min-height:1.5em;font:400 var(--type-body)/1.5 var(--ui);margin:16px 0 6px}.speech-take{color:var(--muted);font:400 var(--type-meta)/1.5 var(--ui);min-height:1.5em}
+.app[data-activity="speech"]{overflow-y:auto}
+.app[data-activity="speech"] .logwrap,.app[data-activity="speech"] .console,.app[data-activity="speech"] .modebar,.app[data-activity="speech"] .stage-tools,.app[data-activity="speech"] .work-entry,.app[data-activity="speech"] .document-card{display:none}
+@media(max-width:420px){.speech-panel{padding:12px}.speech-panel textarea{min-height:130px}}
+
+.speech-panel{--muted:#c6b8ce}body[data-theme="light"] .speech-panel{--muted:#63536d}
