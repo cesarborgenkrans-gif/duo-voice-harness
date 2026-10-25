@@ -1,12 +1,12 @@
 <div align="center">
 
-<img src="docs/media/banner.webp" alt="SparkleSnap developer preview. Duo Voice Harness. Momotamu and Vivi stand together on a pale stage. The line reads: Two companions. One shared stage." width="100%">
+<img src="docs/media/banner.webp" alt="SparkleSnap developer preview. Duo Voice Harness. Tammy and Vivian stand together on a pale stage. The line reads: Two companions. One shared stage." width="100%">
 
 # Duo Voice Harness
 
-**A shared stage. Two companions. A conversation you can join.**
+**A shared stage. Two companions. A conversation you can join. ✨**
 
-Momotamu & Vivi · Local-first AI · Windows desktop
+🌸 Tammy (Momotamu) & ⚡ Vivian (Vivi) · Local-first AI · Windows desktop 🎙️
 
 [Get started](#get-started) · [Meet the conversation](#meet-the-conversation) · [Setup](#set-up-your-engines) · [Verification](#verification) · [Behind the scenes](#behind-the-scenes) · [Contribute](CONTRIBUTING.md)
 
@@ -14,7 +14,7 @@ Momotamu & Vivi · Local-first AI · Windows desktop
 
 ---
 
-Duo Voice Harness brings Momotamu and Vivi together above your conversation on Windows desktop. Type a thought, speak into your microphone, or address one companion directly. Conversation can run on local Gemma via llama.cpp or an OpenAI-compatible endpoint. Spoken replies are a separate choice: local VoiceGen Oui / VoxCPM2, a DIY speech server, ElevenLabs, Cartesia, or Text only.
+Duo Voice Harness brings **Tammy** (Momotamu 🌸) and **Vivian** (Vivi ⚡) together on a live 2D stage above your conversation on Windows desktop. Type a thought, speak into your microphone, or address one companion directly. Conversation can run on local Gemma via llama.cpp or an OpenAI-compatible endpoint. Spoken replies are a separate choice: local VoiceGen Oui / VoxCPM2, a DIY speech server, ElevenLabs, Cartesia, or Text only.
 
 The character stage stays anchored at the top, with the transcript beneath it and your composer within reach. In a duet, the companions face each other. On her own, a companion faces you.
 
